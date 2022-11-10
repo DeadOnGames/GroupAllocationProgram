@@ -1,0 +1,4 @@
+*.swp
+*.pyc
+*.sqlite*
+GAP/GroupAssignmentApp/migrations/*
