@@ -19,13 +19,13 @@ class PersonTests(TestCase):
 class PersonViewTests(TestCase):
         #Test 404 error returned if person view requested for does not exist
         def test_person_404(self):
-                response = self.client.get(reverse("gaa:user",args=(1,)))
+                response = self.client.get(reverse("gaa:user", args = (1,)))
                 self.assertEqual(response.status_code, 404)
         #Tests person view responds correctly if one Person created.
         def test_person_view(self):
-                Person.objects.create(name = "test name",email="test@domain.com")
-                response = self.client.get(reverse("gaa:user",args=(1,)))
-                self.assertContains(response,"Name: test name")
-                self.assertContains(response,"Email: test@domain.com")
+                Person.objects.create(name = "test name",email = "test@domain.com")
+                response = self.client.get(reverse("gaa:user", args=(1,)))
+                self.assertContains(response, "Name: test name")
+                self.assertContains(response, "Email: test@domain.com")
 
 
