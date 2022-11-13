@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Person
+from django.urls import reverse
 
 # Create your tests here.
 class PersonTests(TestCase):
@@ -14,3 +15,13 @@ class PersonTests(TestCase):
                     #Person.objects.create is auto generated constructor, saves instance to data base
                     Person.objects.create(name="test",email="test@domain.com")
                     self.assertEqual(person_count+i+1,len(Person.objects.all()))
+#Test Person View
+class PersonViewTests(TestCase):
+        #Tests person view responds correctly if one Person created.
+        def test_person_view(self):
+                Person.objects.create(name = "test name",email="test@domain.com")
+                response = self.client.get(reverse("gaa:user",args=(1,)))
+                self.assertContains(response,"test name")
+                self.assertContains(response,"test@domain.com")
+
+
