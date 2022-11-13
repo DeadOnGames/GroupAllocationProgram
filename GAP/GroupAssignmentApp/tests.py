@@ -25,7 +25,7 @@ class PersonViewTests(TestCase):
         def test_person_view(self):
                 Person.objects.create(name = "test name",email="test@domain.com")
                 response = self.client.get(reverse("gaa:user",args=(1,)))
-                self.assertContains(response,"test name")
-                self.assertContains(response,"test@domain.com")
+                self.assertContains(response,"Name: test name")
+                self.assertContains(response,"Email: test@domain.com")
 
 
