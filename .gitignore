@@ -2,3 +2,6 @@
 *.pyc
 *.sqlite*
 GAP/GroupAssignmentApp/migrations/*
+*.bak
+*.ini
+*.ini.bak

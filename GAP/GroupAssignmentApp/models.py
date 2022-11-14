@@ -6,3 +6,23 @@ class Person(models.Model):
         email = models.EmailField(max_length=50)
         def __str__(self):
                 return self.name
+            
+class Group(models.Model):
+    size = models.IntegerField(default = 4)
+    isApproved = models.blank
+    task = models.CharField(max_length=50)
+    
+    def getScore(self):
+        return False
+    
+    def getParticipants(self):
+        return False
+    
+    def approve(self):
+        return False        
+    
+    def unapprove(self):
+        return False
+    
+    def __str__(self):
+        return f"Is the group approved?{self.isApproved}"
