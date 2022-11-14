@@ -12,5 +12,5 @@ class PersonTests(TestCase):
                 person_count = len(Person.objects.all())
                 for i in range(0,10):
                     #Person.objects.create is auto generated constructor, saves instance to data base
-                    Person.objects.create(name="test",email="test@domain.com")
+                    Person.objects.create(name="test",email="test{0}@domain.com".format(i))
                     self.assertEqual(person_count+i+1,len(Person.objects.all()))
