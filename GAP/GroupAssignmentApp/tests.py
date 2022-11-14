@@ -14,3 +14,9 @@ class PersonTests(TestCase):
                     #Person.objects.create is auto generated constructor, saves instance to data base
                     Person.objects.create(name="test",email="test{0}@domain.com".format(i))
                     self.assertEqual(person_count+i+1,len(Person.objects.all()))
+        def test_no_email_person(self):
+                Person.objects.create(name="john smith")
+                Person.objects.create(name="john stewart")
+                self.assertEqual(len(Person.objects.all()),2)
+                self.assertEqual(len(Person.objects.get(name="john smith")),1)
+                self.assertEqual(len(Person.objects.get(name="john stewart")),1)
