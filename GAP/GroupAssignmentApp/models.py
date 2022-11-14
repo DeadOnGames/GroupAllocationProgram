@@ -9,7 +9,7 @@ class Person(models.Model):
             
 class Group(models.Model):
     size = models.IntegerField(default = 4)
-    isApproved = models.blank
+    isApproved = models.BooleanField(default=False)
     task = models.CharField(max_length=50)
     
     def getScore(self):

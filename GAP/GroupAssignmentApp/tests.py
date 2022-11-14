@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Person
+from .models import Person, Group
 
 # Create your tests here.
 class PersonTests(TestCase):
@@ -14,3 +14,10 @@ class PersonTests(TestCase):
                     #Person.objects.create is auto generated constructor, saves instance to data base
                     Person.objects.create(name="test",email="test@domain.com")
                     self.assertEqual(person_count+i+1,len(Person.objects.all()))
+                    
+class GroupTests(TestCase):
+    def test_approve(self):
+        g = Group.objects.create()
+        self.assertFalse(g.isApproved)
+        g.approve()
+        self.assertTrue(g.isApproved)
