@@ -20,3 +20,11 @@ class PersonTests(TestCase):
                 self.assertEqual(len(Person.objects.all()),2)
                 self.assertEqual(len(Person.objects.get(name="john smith")),1)
                 self.assertEqual(len(Person.objects.get(name="john stewart")),1)
+        def test_attempt_save_two_people_same_email(self):
+                p1 = Person(name = "Joe Blogs", email = "jblogs@domain.com")
+                p2 = Person(name = "Jane Blogs", email = "jblogs@domain.com")
+                p1.save()
+                self.assertEqual(len(Person.objects.all()),1)
+                p2.save()
+                self.assertEqual(len(Person.objects.all()),1)
+                self.assertContains(Person.objects.all(),p1)
