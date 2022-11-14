@@ -6,3 +6,12 @@ class Person(models.Model):
         email = models.EmailField(max_length=50)
         def __str__(self):
                 return self.name
+        #Override Save method
+        def save(self, *args, **kwargs):
+                if(self.email == "" or self.email == None):
+                        super(Person, self).save(*args, **kwargs)
+                        return
+                try:
+                        Person.objects.get(email = self.email)
+                except Person.DoesNotExist:
+                        super(Person, self).save(*args, **kwargs)
