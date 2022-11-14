@@ -26,8 +26,8 @@ class PersonTests(TestCase):
                 exceptionRaised = False
                 try:
                         p2.save()
-                except Exception  as e:
-                        self.assertEqual(str(e), "Couldn't save person: Email Already Exists")
+                except Person.InvalidEmailException  as e:
+                        self.assertEqual(e.message, Person.InvalidEmailException.message)
                         exceptionRaised = True
                 self.assertEqual(len(Person.objects.all()),1)
                 self.assertTrue(exceptionRaised)
