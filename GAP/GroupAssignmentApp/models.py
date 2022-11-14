@@ -13,5 +13,6 @@ class Person(models.Model):
                         return
                 try:
                         Person.objects.get(email = self.email)
+                        raise Exception("Couldn't save person: Email Already Exists")
                 except Person.DoesNotExist:
                         super(Person, self).save(*args, **kwargs)

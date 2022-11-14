@@ -23,5 +23,11 @@ class PersonTests(TestCase):
                 p2 = Person(name = "Jane Blogs", email = "jblogs@domain.com")
                 p1.save()
                 self.assertEqual(len(Person.objects.all()),1)
-                p2.save()
+                exceptionRaised = False
+                try:
+                        p2.save()
+                except Exception  as e:
+                        self.assertEqual(str(e), "Couldn't save person: Email Already Exists")
+                        exceptionRaised = True
                 self.assertEqual(len(Person.objects.all()),1)
+                self.assertTrue(exceptionRaised)
