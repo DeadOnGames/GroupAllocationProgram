@@ -4,17 +4,16 @@ import numpy as np
 def generate_neighbour(td):
 
     l = len(td)
-    print("l", l)
     if l == 0:
-        return []
+        return [[]]
 
     for i in range(l):
         tdl = td[i]
         m = len(tdl)
-        tdm = tdl[m]
-        print(tdl, "1")
-        print(tdm, "2")
-        return []
+        tdi = td[i]
+        for j in range(m):
+            if j == 0:
 
-generate_neighbour([[1,2,3],[4,5,6]])
+        
 
+generate_neighbour([[1,2,3]])
