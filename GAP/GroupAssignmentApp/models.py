@@ -19,9 +19,11 @@ class Group(models.Model):
         return False
     
     def approve(self):
+        self.isApproved = True
         return False        
     
     def unapprove(self):
+        self.isApproved = True
         return False
     
     def __str__(self):
