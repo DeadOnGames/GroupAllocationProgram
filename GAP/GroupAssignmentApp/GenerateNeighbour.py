@@ -1,6 +1,5 @@
-
 def generate_neighbour(td):
-    
+    perm = []
     l = len(td)
     print("array", td)
     if l == 0:
@@ -9,17 +8,14 @@ def generate_neighbour(td):
     for i in range(l):
         tdi = td[i]
         m = len(tdi)
-
-        for j in range(m):
+        for j in range(m-1):
             o = tdi[j]
-            for k in range(j,m-1):
-                tnew = tdi
-                print("before: ", tnew)
-                swap = tnew[k+1]
-                tnew[k+1] = o
+            tnew = 0
+            for k in range(j+1,m):
+                tnew = td[i].copy()
+                swap = tnew[k]
                 tnew[j] = swap
-                print(tnew)
-                
-           
-
-print(generate_neighbour([[1,2,3]]))
+                tnew[k] = o
+                perm.append(tnew)
+    
+    return perm
