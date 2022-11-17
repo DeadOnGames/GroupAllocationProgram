@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Person
+from .models import Person, Group
 
 # Create your tests here.
 class PersonTests(TestCase):
@@ -34,3 +34,17 @@ class PersonTests(TestCase):
                         exceptionRaised = True
                 self.assertEqual(len(Person.objects.all()),1)
                 self.assertTrue(exceptionRaised)
+class GroupTests(TestCase):
+    #tests if approve function correctly changes isApproved variable
+    def test_approve(self):
+        g = Group.objects.create()
+        self.assertFalse(g.isApproved)
+        g.approve()
+        self.assertTrue(g.isApproved)
+    #tests if unapprove function correctly changes isApproved variable
+    def test_unapprove(self):
+        g = Group.objects.create()
+        g.approve()
+        self.assertTrue(g.isApproved)
+        g.unapprove()
+        self.assertFalse(g.isApproved)
