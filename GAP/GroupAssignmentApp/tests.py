@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Person, Group
+from .models import Person, Group, Supervisor
 
 # Create your tests here.
 class PersonTests(TestCase):

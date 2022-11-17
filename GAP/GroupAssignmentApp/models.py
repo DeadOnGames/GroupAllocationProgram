@@ -19,6 +19,7 @@ class Person(models.Model):
                         raise Person.InvalidEmailException
                 except Person.DoesNotExist:
                         super(Person, self).save(*args, **kwargs)
+
 class Group(models.Model):
     size = models.IntegerField(default = 4)
     isApproved = models.BooleanField(default=False)
@@ -38,3 +39,20 @@ class Group(models.Model):
     
     def __str__(self):
         return f"Is the group approved?{self.isApproved}"
+
+class Supervisor(models.Model):
+    group = models.ForeignKey(Group, on_delete = models.CASCADE)
+    #participant = models.ForeignKey(Participant, on_delete = models.CASCADE)
+    genderWeight = models.DecimalField()
+    preferenceWeight = models.DecimalField()
+    suggestedGroup = models.CharField()
+    
+    def assignGroups(self):
+        return False
+    
+    def approveGroups(self):
+        return False
+    def getGroups(self):
+        return False
+    def getParticipants(self):
+        return False
