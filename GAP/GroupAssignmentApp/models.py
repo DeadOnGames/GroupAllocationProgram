@@ -41,6 +41,8 @@ class Group(models.Model):
         return f"Is the group approved?{self.isApproved}"
 
 class Supervisor(models.Model):
+    group = models.ForeignKey(Group, on_delete = models.CASCADE)
+    #participant = models.ForeignKey(Participant, on_delete = models.CASCADE)
     genderWeight = models.DecimalField()
     preferenceWeight = models.DecimalField()
     suggestedGroup = models.CharField()
