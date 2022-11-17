@@ -19,3 +19,22 @@ class Person(models.Model):
                         raise Person.InvalidEmailException
                 except Person.DoesNotExist:
                         super(Person, self).save(*args, **kwargs)
+class Group(models.Model):
+    size = models.IntegerField(default = 4)
+    isApproved = models.BooleanField(default=False)
+    task = models.CharField(max_length=50)
+    
+    def getScore(self):
+        return False
+    
+    def getParticipants(self):
+        return False
+    
+    def approve(self):
+        self.isApproved = True        
+    
+    def unapprove(self):
+        self.isApproved = False
+    
+    def __str__(self):
+        return f"Is the group approved?{self.isApproved}"

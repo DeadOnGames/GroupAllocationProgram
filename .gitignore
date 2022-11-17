@@ -4,3 +4,6 @@
 *.swo
 *.*.swo
 GAP/GroupAssignmentApp/migrations/*
+*.bak
+*.ini
+*.ini.bak

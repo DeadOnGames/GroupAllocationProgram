@@ -1,6 +1,10 @@
 from django.test import TestCase
-from .models import Person
+
+
 from django.urls import reverse
+
+from .models import Person, Group
+
 
 # Create your tests here.
 class PersonTests(TestCase):
@@ -35,6 +39,7 @@ class PersonTests(TestCase):
                         exceptionRaised = True
                 self.assertEqual(len(Person.objects.all()),1)
                 self.assertTrue(exceptionRaised)
+
 #Test Person View
 class PersonViewTests(TestCase):
         #Test 404 error returned if person view requested for does not exist
@@ -47,3 +52,19 @@ class PersonViewTests(TestCase):
                 response = self.client.get(reverse("gaa:user", args=(1,)))
                 self.assertContains(response, "Name: test name")
                 self.assertContains(response, "Email: test@domain.com")
+
+class GroupTests(TestCase):
+    #tests if approve function correctly changes isApproved variable
+    def test_approve(self):
+        g = Group.objects.create()
+        self.assertFalse(g.isApproved)
+        g.approve()
+        self.assertTrue(g.isApproved)
+    #tests if unapprove function correctly changes isApproved variable
+    def test_unapprove(self):
+        g = Group.objects.create()
+        g.approve()
+        self.assertTrue(g.isApproved)
+        g.unapprove()
+        self.assertFalse(g.isApproved)
+
