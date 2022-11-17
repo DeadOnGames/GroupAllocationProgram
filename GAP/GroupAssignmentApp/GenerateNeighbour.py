@@ -1,21 +1,13 @@
-def generate_neighbour(td):
+def generate_neighbour(twoD):
     perm = []
-    l = len(td)
-    print("array", td)
-    if l == 0:
-        return [[]]
+    # perm = array to be returned: 3d array
+    # twoD = 2d list
+    if len(twoD) == 1:
+        # if only one group is submitted, group is returned with no change
+        return twoD
+    elif len(twoD) == 0:
+        # if no groups entered, warning message given
+        return "Error: No groups submitted"
 
-    for i in range(l):
-        tdi = td[i]
-        m = len(tdi)
-        for j in range(m-1):
-            o = tdi[j]
-            tnew = 0
-            for k in range(j+1,m):
-                tnew = td[i].copy()
-                swap = tnew[k]
-                tnew[j] = swap
-                tnew[k] = o
-                perm.append(tnew)
-    
-    return perm
+    twoDnew = twoD.copy()
+
