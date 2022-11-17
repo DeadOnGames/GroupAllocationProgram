@@ -44,6 +44,7 @@ class GroupTests(TestCase):
     #tests if unapprove function correctly changes isApproved variable
     def test_unapprove(self):
         g = Group.objects.create()
-        self.assertFalse(g.isApproved)
+        g.approve()
+        self.assertTrue(g.isApproved)
         g.unapprove()
         self.assertFalse(g.isApproved)
