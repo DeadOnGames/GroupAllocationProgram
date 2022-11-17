@@ -19,3 +19,18 @@ class Person(models.Model):
                         raise Person.InvalidEmailException
                 except Person.DoesNotExist:
                         super(Person, self).save(*args, **kwargs)
+                        
+class Supervisor(models.Model):
+    genderWeight = models.DecimalField()
+    preferenceWeight = models.DecimalField()
+    suggestedGroup = models.CharField()
+    
+    def assignGroups(self):
+        return False
+    
+    def approveGroups(self):
+        return False
+    def getGroups(self):
+        return False
+    def getParticipants(self):
+        return False
