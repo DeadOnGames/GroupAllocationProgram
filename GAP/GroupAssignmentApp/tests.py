@@ -46,4 +46,4 @@ class GroupTests(TestCase):
         g = Group.objects.create()
         self.assertFalse(g.isApproved)
         g.unapprove()
-        self.assertTrue(g.isApproved)
+        self.assertFalse(g.isApproved)

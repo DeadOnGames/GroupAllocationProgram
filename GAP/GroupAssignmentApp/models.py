@@ -31,12 +31,10 @@ class Group(models.Model):
         return False
     
     def approve(self):
-        self.isApproved = True
-        return False        
+        self.isApproved = True        
     
     def unapprove(self):
-        self.isApproved = True
-        return False
+        self.isApproved = False
     
     def __str__(self):
         return f"Is the group approved?{self.isApproved}"
