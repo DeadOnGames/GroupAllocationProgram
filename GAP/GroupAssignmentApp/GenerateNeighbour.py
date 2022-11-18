@@ -10,6 +10,15 @@ def generate_neighbour(twoD):
     elif len(twoD) == 0:
         # if no groups entered, warning message given
         return "Error: No groups submitted"
+
+    twoDC = twoD.copy()
+    for i in range(len(twoDC)):
+        lst = twoDC[i]
+        # lst is the i-th list in twoD
+        for j in range(len(lst)):
+            elem = lst[j]
+            # elem is the j-th element of lst
+
     
 
 
@@ -17,8 +26,8 @@ def generate_neighbour(twoD):
 # inputting two arrays with 2 elements each
 print(generate_neighbour([[1,2],[3,4]]))
 # inputting three arrays with 2 elements each
-print(generate_neighbour([[1,2],[3,4],[5,6]]))
+#print(generate_neighbour([[1,2],[3,4],[5,6]]))
 # inputting 1 array
-print(generate_neighbour([1,2,3]))
+#print(generate_neighbour([1,2,3]))
 #inputting an empty array
-print(generate_neighbour([]))
+#print(generate_neighbour([]))
