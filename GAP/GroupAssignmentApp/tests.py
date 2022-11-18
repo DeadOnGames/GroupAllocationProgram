@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Person, Group, Supervisor
+from .models import Person, Group, Supervisor, Participant
 
 
 
@@ -65,4 +65,44 @@ class GroupTests(TestCase):
         self.assertTrue(g.isApproved)
         g.unapprove()
         self.assertFalse(g.isApproved)
+
+class ParticipantTests(TestCase):
+        #tests if prefernces are properly set to participant
+        def test_set_preferences(self):
+                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p1 = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p2 = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p3 = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p.setPreferences(p1)
+                self.assertContains(p.getPreferences, p1)
+                p.setPreferences(p2)
+                self.assertContains(p.getPreferences, p2)
+                p.setPreferences(p3)
+                self.assertContains(p.getPreferences, p3)
+
+        #tests if supervisor is properly assigned to participant
+        def test_set_supervisor(self):
+                s = Supervisor.objects.create(group = None, participant = None, genderWeight = None, preferenceWeight = None, suggestedGroup = None)
+                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p.setSupervisor(s)
+
+                self.assertContains(s.getParticipants(), p)
+
+        #tests if participant is properly added to group
+        def test_assign_group(self):
+                g = Group.objects.create()
+                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p.assignGroup(g)
+
+                self.assertContains(g.getParticipants(), p)
+
+        #tests if participant is properly removed with removeFromGroup
+        def test_remove_from_group(self):
+                g = Group.objects.create()
+                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p.assignGroup(g)
+                p.removeFromGroup()
+
+                self.assertAlmostEqual(p.getGroup, None)
+
 

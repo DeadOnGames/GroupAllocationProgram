@@ -42,7 +42,7 @@ class Group(models.Model):
 
 class Supervisor(models.Model):
     group = models.ForeignKey(Group, on_delete = models.CASCADE)
-    #participant = models.ForeignKey(Participant, on_delete = models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete = models.CASCADE)
     genderWeight = models.DecimalField()
     preferenceWeight = models.DecimalField()
     suggestedGroup = models.CharField()
@@ -52,7 +52,32 @@ class Supervisor(models.Model):
     
     def approveGroups(self):
         return False
+
     def getGroups(self):
         return False
+
     def getParticipants(self):
         return False
+
+class Participant(Person):
+    preferences = models.ManyToManyField(Person)
+    supervisor = models.ForeignKey(Supervisor, on_delete=models.CASCADE)
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)
+
+    def setPreferences(self, participant):
+        self.preferences = participant
+
+    def getPreferences(self, participant):
+        return self.preferences
+
+    def assignGroup(self, group):
+        self.group = group
+
+    def setSupervisor(self, supervisor):
+        self.supervisor = supervisor
+
+    def removeFromGroup(self):
+        self.group = None
+
+    def getGroup(self):
+        return self.group
