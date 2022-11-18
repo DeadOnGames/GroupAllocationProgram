@@ -10,4 +10,12 @@ def generate_neighbour(twoD):
         return "Error: No groups submitted"
 
     twoDnew = twoD.copy()
+    length = len(twoDnew)
+    for i in range(length):
+        newList = twoDnew[i]
+        # newList is the i-th list in twoDnew
 
+        
+
+
+generate_neighbour([[1,2,3],[4,5,6]])
