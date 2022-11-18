@@ -1,6 +1,8 @@
+
+
 def generate_neighbour(twoD):
     perm = []
-    # perm = array to be returned: 3d array
+    # perm = 3d array to be returned
     # twoD = 2d list
     if len(twoD) == 1:
         # if only one group is submitted, group is returned with no change
@@ -8,17 +10,15 @@ def generate_neighbour(twoD):
     elif len(twoD) == 0:
         # if no groups entered, warning message given
         return "Error: No groups submitted"
-
-    twoDnew = twoD.copy()
-    length = len(twoDnew)
-    for i in range(length-1):
-        newList = twoDnew[i]
-        # newList is the i-th list in twoDnew
-        for j in range(i,length-1):
-            swapList = twoDnew[j]
-            # swap list is the j-th list in twoDnew
-
-        
+    
 
 
-generate_neighbour([[1,2,3],[4,5,6]])
+# testing:
+# inputting two arrays with 2 elements each
+print(generate_neighbour([[1,2],[3,4]]))
+# inputting three arrays with 2 elements each
+print(generate_neighbour([[1,2],[3,4],[5,6]]))
+# inputting 1 array
+print(generate_neighbour([1,2,3]))
+#inputting an empty array
+print(generate_neighbour([]))
