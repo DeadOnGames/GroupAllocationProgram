@@ -11,21 +11,16 @@ def generate_neighbour(twoD):
         # if no groups entered, warning message given
         return "Error: No groups submitted"
 
-    twoDC = twoD.copy()
-    for i in range(len(twoDC)):
-        lst = twoDC[i]
-        elem = lst[i]
+    
+    for i in range(len(twoD)):
+        twoDC = twoD.copy()
+        iList = twoDC[i]
+        elem = iList[i]
+        for j in range(i,len(twoDC)-1):
+            jList = twoDC[j+1]
+            elemJ = jList[j]
 
-        # lst is the i-th list in twoD
-        newList = []
-        newlist.append(elem)
-        for j in range(i+1,len(twoDC)):
-                       
-            nextList = list[j]
-            newElem = nextList[j-1]
-            newList.append(newElem)
 
-        perm.append(newList)
 
     
 
