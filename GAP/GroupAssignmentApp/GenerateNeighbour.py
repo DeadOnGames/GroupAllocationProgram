@@ -11,9 +11,12 @@ def generate_neighbour(twoD):
 
     twoDnew = twoD.copy()
     length = len(twoDnew)
-    for i in range(length):
+    for i in range(length-1):
         newList = twoDnew[i]
         # newList is the i-th list in twoDnew
+        for j in range(i,length-1):
+            swapList = twoDnew[j]
+            # swap list is the j-th list in twoDnew
 
         
 
