@@ -12,14 +12,19 @@ def generate_neighbour(twoD):
         return "Error: No groups submitted"
 
     
-    for i in range(len(twoD)):
+    for i in range(len(twoD)-1):
         twoDC = twoD.copy()
         iList = twoDC[i]
+        # iList is the i-th list in twoD
         elem = iList[i]
-        for j in range(i,len(twoDC)-1):
-            jList = twoDC[j+1]
-            elemJ = jList[j]
+        # elem is the i-th element of the i-th list
+        iList2 = twoDC[i+1]
+        elem2 = iList2[i+1]
+        iList[i] = elem2
+        iList2[i+1] = elem
+        perm.append(twoDC)
 
+    return perm
 
 
     
@@ -28,6 +33,7 @@ def generate_neighbour(twoD):
 # testing:
 # inputting two arrays with 2 elements each
 print(generate_neighbour([[1,2],[3,4]]))
+
 # inputting three arrays with 2 elements each
 #print(generate_neighbour([[1,2],[3,4],[5,6]]))
 # inputting 1 array
