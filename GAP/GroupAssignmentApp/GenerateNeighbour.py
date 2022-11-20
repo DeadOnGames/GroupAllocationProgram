@@ -1,6 +1,6 @@
 
 
-def generate_neighbour(twoD):
+def generate_neighbours(twoD):
     perm = []
     # perm = 3d array to be returned
     # twoD = 2d list
@@ -19,7 +19,7 @@ def generate_neighbour(twoD):
         iList2 = twoDC[i+1]
         for j in range(len(iList)):
             for k in range(len(iList2)):
-
+                return perm
 
 
 
@@ -38,23 +38,3 @@ def generate_neighbour(twoD):
              #   twoDC[i][i+1] = elemJ
               #  twoDC[j+1][k] = elem
                # perm.append(twoDC)
-
-
-            
-
-    return perm
-
-
-    
-
-
-# testing:
-# inputting two arrays with 2 elements each
-print(generate_neighbour([[1,2],[3,4]]))
-
-# inputting three arrays with 2 elements each
-#print(generate_neighbour([[1,2],[3,4],[5,6]]))
-# inputting 1 array
-#print(generate_neighbour([1,2,3]))
-#inputting an empty array
-#print(generate_neighbour([]))

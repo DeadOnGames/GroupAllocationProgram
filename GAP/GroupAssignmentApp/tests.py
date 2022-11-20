@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from .models import Person, Group, Supervisor
+from .GenerateNeighbour import generate_neighbours
 
 
 
@@ -65,4 +66,11 @@ class GroupTests(TestCase):
         self.assertTrue(g.isApproved)
         g.unapprove()
         self.assertFalse(g.isApproved)
+class GenerateNeighboursTests(TestCase):
+    def test_one_array_input(self):
+        test_arr = [[1,2,3]]
+        nhbrs = generate_neighbours(test_arr)
+        #check nhbrs is one element array, with test_arr being said element.
+        self.assertEqual(nhbrs[0],test_arr)
+        self.assertEqual(len(nhbrs),1)
 
