@@ -1,4 +1,9 @@
 *.swp
 *.pyc
 *.sqlite*
+*.swo
+*.*.swo
 GAP/GroupAssignmentApp/migrations/*
+*.bak
+*.ini
+*.ini.bak
