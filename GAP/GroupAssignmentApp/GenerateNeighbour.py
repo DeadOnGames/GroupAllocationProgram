@@ -16,13 +16,12 @@ def generate_neighbour(twoD):
         twoDC = twoD.copy()
         iList = twoDC[i]
         # iList is the i-th list in twoD
-        elem = iList[i]
+        elem = iList[i+1]
         # elem is the i-th element of the i-th list
-        iList2 = twoDC[i+1]
-        elem2 = iList2[i+1]
-        iList[i] = elem2
-        iList2[i+1] = elem
-        perm.append(twoDC)
+        for j in range(i,len(twoD)-1):
+            jList = twoDC[j+1]
+            for k in range(len(twoDC()))
+            
 
     return perm
 
