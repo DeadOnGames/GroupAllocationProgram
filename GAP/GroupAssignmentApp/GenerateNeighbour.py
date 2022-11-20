@@ -4,7 +4,7 @@ def generate_neighbours(iter_2d):
     # iter_2d = 2d iterable
     if len(iter_2d) == 1:
         # if only one group is submitted, group is returned with no change
-        return [iter_2d]
+        return [[[]]]
     elif len(iter_2d) == 0:
         # if no groups entered, warning message given
         return "Error: No groups submitted"

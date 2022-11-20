@@ -75,9 +75,14 @@ class GroupTests(TestCase):
 
 
 class GenerateNeighboursTests(TestCase):
+    # Test out for input array of length one is empty 3d array
     def test_one_array_input(self):
         test_arr = [[1, 2, 3]]
         nhbrs = generate_neighbours(test_arr)
-        # check nhbrs is one element array, with test_arr being said element.
-        self.assertEqual(nhbrs[0], test_arr)
-        self.assertEqual(len(nhbrs), 1)
+        self.assertEqual(nhbrs, [[[]]])
+
+    # Test that Input is not inlucded as neighbour
+    def test_input_not_included(self):
+        test_arr = [[1, 2], [3]]
+        nhbrs = generate_neighbours(test_arr)
+        self.assertFalse(test_arr in nhbrs)
