@@ -95,3 +95,8 @@ class GenerateNeighboursTests(TestCase):
         for n in nhbrs:
             self.assertFalse(n in found_nhbrs)
             found_nhbrs.append(n)
+    #Test correct output for 3 elements in two arrays given
+    def test_with_3_element_2_array(self):
+        test_arr = [[1,2],[3]]
+        expected_out = [[[3,2],[1]],[[1,3],[2]]]
+        self.assertEquals(generate_neighbours(test_arr),expected_out)
