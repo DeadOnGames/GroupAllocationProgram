@@ -81,8 +81,17 @@ class GenerateNeighboursTests(TestCase):
         nhbrs = generate_neighbours(test_arr)
         self.assertEqual(nhbrs, [[[]]])
 
-    # Test that Input is not inlucded as neighbour
+    # Test that Input is not included as neighbour
     def test_input_not_included(self):
         test_arr = [[1, 2], [3]]
         nhbrs = generate_neighbours(test_arr)
         self.assertFalse(test_arr in nhbrs)
+
+    # Test no duplicate neighbours.
+    def test_no_duplicates(self):
+        test_arr = [[1, 2], [3, 4], [5, 6, 7], [8]]
+        nhbrs = generate_neighbours(test_arr)
+        found_nhbrs = []
+        for n in nhbrs:
+            self.assertFalse(n in found_nhbrs)
+            found_nhbrs.append(n)
