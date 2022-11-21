@@ -73,11 +73,23 @@ class GroupTests(TestCase):
         g.unapprove()
         self.assertFalse(g.isApproved)
 
+    # test assigning allocation to group
+    def test_assign_allocation(self):
+        g = Group.objects.create()
+        a = Allocation.objects.create()
+        g.allocation = a
+        g.save()
+        g1 = Group.objects.create()
+        self.assertEqual(len(Group.objects.all()), 2)
+        self.assertEqual(len(a.group_set.all()), 1)
+
 
 class AllocationTests(TestCase):
     def test_create(self):
         s = Supervisor_Model.objects.create()
         a = Allocation.objects.create(supervisor=s)
+
+
 class GenerateNeighboursTests(TestCase):
     # Test out for input array of length one is empty 3d array
     def test_one_array_input(self):
