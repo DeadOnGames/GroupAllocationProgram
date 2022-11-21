@@ -95,16 +95,19 @@ class GenerateNeighboursTests(TestCase):
         for n in nhbrs:
             self.assertFalse(n in found_nhbrs)
             found_nhbrs.append(n)
-    #Test correct output for 3 elements in two arrays given
+
+    # Test correct output for 3 elements in two arrays given
     def test_with_3_element_2_array(self):
-        test_arr = [[1,2],[3]]
-        expected_out = [[[3,2],[1]],[[1,3],[2]]]
-        self.assertEquals(generate_neighbours(test_arr),expected_out)
-    #Test correct output for two, two element arrays
+        test_arr = [[1, 2], [3]]
+        expected_out = [[[3, 2], [1]], [[1, 3], [2]]]
+        self.assertEquals(generate_neighbours(test_arr), expected_out)
+
+    # Test correct output for two, two element arrays
     def test_2_2_element_arrays(self):
-        test_arr = [[1,2],[3,4]]
-        expected_out = [
-            [[3,2],[1,4]],
-            [[4,2],[3,1]]
-            ]
-        self.assertEqual(expected_out,generate_neighbours(test_arr))
+        test_arr = [[1, 2], [3, 4]]
+        expected_out = [[[3, 2], [1, 4]], [[4, 2], [3, 1]]]
+        self.assertEqual(expected_out, generate_neighbours(test_arr))
+
+    # Test error message if wrong input shape
+    def test_wrong_shape(self):
+        self.assertEqual("Error: No groups submitted", generate_neighbours([]))
