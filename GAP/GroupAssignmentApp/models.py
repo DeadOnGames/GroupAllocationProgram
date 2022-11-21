@@ -27,13 +27,13 @@ class Person(models.Model):
 class Group(models.Model):
     size = models.IntegerField(default=4)
     isApproved = models.BooleanField(default=False)
-    task = models.CharField(max_length=50)
+    task = models.CharField(max_length=50, null=True)
 
     def getScore(self):
         return False
 
     def getParticipants(self):
-        return False
+        return Participant.objects.get(group=self)
 
     def approve(self):
         self.isApproved = True
@@ -45,12 +45,10 @@ class Group(models.Model):
         return f"Is the group approved?{self.isApproved}"
 
 
-class Supervisor(models.Model):
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    # participant = models.ForeignKey(Participant, on_delete = models.CASCADE)
-    genderWeight = models.DecimalField(max_digits=11, decimal_places=10)
-    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10)
-    suggestedGroup = models.CharField(max_length=10)
+class Supervisor_Model(Person):
+    genderWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    suggestedGroup = models.CharField(max_length=10, default="")
 
     def assignGroups(self):
         return False
@@ -63,3 +61,34 @@ class Supervisor(models.Model):
 
     def getParticipants(self):
         return False
+
+
+class Participant(Person):
+    preferences = models.ManyToManyField(
+        Person, related_name="participant_preference", null=True
+    )
+    supervisor = models.ForeignKey(
+        Supervisor_Model,
+        on_delete=models.CASCADE,
+        related_name="participant_supervisor",
+        null=True,
+    )
+    group = models.OneToOneField(Group, on_delete=models.CASCADE, null=True)
+
+    def setPreferences(self, participant):
+        self.preferences.add(participant)
+
+    def getPreferences(self):
+        return self.preferences.all()
+
+    def assignGroup(self, group):
+        self.group = group
+
+    def setSupervisor(self, supervisor):
+        self.supervisor = supervisor
+
+    def removeFromGroup(self):
+        self.group = None
+
+    def getGroup(self):
+        return self.group
