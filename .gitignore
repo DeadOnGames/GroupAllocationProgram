@@ -7,3 +7,6 @@ GAP/GroupAssignmentApp/migrations/*
 *.bak
 *.ini
 *.ini.bak
+*.lock
+*.vsidx
+*.wsuo
