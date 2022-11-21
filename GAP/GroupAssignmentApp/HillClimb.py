@@ -4,20 +4,17 @@ from copy import deepcopy
 from statistics import mode
 
 
-def Eval(node):
-    return mode(map(sum, node))
-
-
-def hill_climb(start_node, max_iterations=1000):
+def hill_climb(start_node, EVAL_HILL_CLIMB, max_iterations=10):
     current_node = deepcopy(start_node)
     for i in range(0, max_iterations):
         nhbrs = generate_neighbours(current_node)
         next_eval = sys.float_info.min
         next_node = None
         for node in nhbrs:
-            if Eval(node) >= next_eval:
-                next_eval = Eval(node)
+            if EVAL_HILL_CLIMB(node) >= next_eval:
+                next_eval = EVAL_HILL_CLIMB(node)
                 next_node = node
-        if next_eval <= Eval(current_node):
+        if next_eval <= EVAL_HILL_CLIMB(current_node):
             return current_node
         current_node = next_node
+    return current_node
