@@ -26,13 +26,13 @@ class Person(models.Model):
 class Group(models.Model):
     size = models.IntegerField(default=4)
     isApproved = models.BooleanField(default=False)
-    task = models.CharField(max_length=50)
+    task = models.CharField(max_length=50,null=True)
 
     def getScore(self):
         return False
 
     def getParticipants(self):
-        return False
+        return Participant.objects.get(group=self)
 
     def approve(self):
         self.isApproved = True
@@ -45,9 +45,9 @@ class Group(models.Model):
 
 
 class SuperVisor_Model(Person):
-    genderWeight = models.DecimalField(max_digits=11, decimal_places=10)
-    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10)
-    suggestedGroup = models.CharField(max_length=10)
+    genderWeight = models.DecimalField(max_digits=11, decimal_places=10,default=1)
+    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10,default=1)
+    suggestedGroup = models.CharField(max_length=10,default="")
     def assignGroups(self):
         return False
 
@@ -59,17 +59,16 @@ class SuperVisor_Model(Person):
 
     def getParticipants(self):
         return False
-
 class Participant(Person):
-    preferences = models.ManyToManyField(Person, related_name="participant_preference")
-    supervisor = models.ForeignKey(SuperVisor_Model, on_delete=models.CASCADE, related_name = "participant_supervisor")
-    group = models.OneToOneField(Group, on_delete=models.CASCADE)
+    preferences = models.ManyToManyField(Person, related_name="participant_preference",null=True)
+    supervisor = models.ForeignKey(SuperVisor_Model, on_delete=models.CASCADE, related_name = "participant_supervisor",null=True)
+    group = models.OneToOneField(Group, on_delete=models.CASCADE,null=True)
 
     def setPreferences(self, participant):
-        self.preferences = participant
+        self.preferences.add(participant)
 
-    def getPreferences(self, participant):
-        return self.preferences
+    def getPreferences(self):
+        return self.preferences.all()
 
     def assignGroup(self, group):
         self.group = group

@@ -75,41 +75,39 @@ class GroupTests(TestCase):
 class ParticipantTests(TestCase):
         #tests if prefernces are properly set to participant
         def test_set_preferences(self):
-                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
-                p1 = Participant.objects.create(preferences = None, supervisor = None, group = None)
-                p2 = Participant.objects.create(preferences = None, supervisor = None, group = None)
-                p3 = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p = Participant.objects.create()
+                p1 = Participant.objects.create()
+                p2 = Participant.objects.create()
+                p3 = Participant.objects.create()
                 p.setPreferences(p1)
-                self.assertContains(p.getPreferences, p1)
+                self.assertEqual(p1.email, p.getPreferences()[0].email)
                 p.setPreferences(p2)
-                self.assertContains(p.getPreferences, p2)
                 p.setPreferences(p3)
-                self.assertContains(p.getPreferences, p3)
 
         #tests if supervisor is properly assigned to participant
         def test_set_supervisor(self):
-                s = SuperVisor_Model.objects.create(group = None, participant = None, genderWeight = None, preferenceWeight = None, suggestedGroup = None)
-                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                s = SuperVisor_Model.objects.create(genderWeight = 0.0, preferenceWeight = 0.0, suggestedGroup="b")
+                p = Participant.objects.create()
                 p.setSupervisor(s)
 
-                self.assertContains(s.getParticipants(), p)
+                self.assertEqual(s,p.supervisor)
 
         #tests if participant is properly added to group
         def test_assign_group(self):
                 g = Group.objects.create()
-                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p = Participant.objects.create()
                 p.assignGroup(g)
 
-                self.assertContains(g.getParticipants(), p)
+                self.assertTrue(p in g.getParticipants())
 
         #tests if participant is properly removed with removeFromGroup
         def test_remove_from_group(self):
                 g = Group.objects.create()
-                p = Participant.objects.create(preferences = None, supervisor = None, group = None)
+                p = Participant.objects.create(supervisor = None, group = None)
                 p.assignGroup(g)
                 p.removeFromGroup()
 
-                self.assertAlmostEqual(p.getGroup, None)
+                self.assertEqual(0, len(Participant.objects.get(group=g)))
 
 class GenerateNeighboursTests(TestCase):
     # Test out for input array of length one is empty 3d array
