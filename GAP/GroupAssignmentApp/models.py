@@ -22,8 +22,6 @@ class Person(models.Model):
             raise Person.InvalidEmailException
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
-class Participant(Person): pass
-class Supervisor(Participant): pass
 
 class Group(models.Model):
     size = models.IntegerField(default=4)
@@ -46,8 +44,7 @@ class Group(models.Model):
         return f"Is the group approved?{self.isApproved}"
 
 
-class Supervisor(models.Model):
-    group = models.ForeignKey(Group, on_delete = models.CASCADE)
+class SuperVisor_Model(Person):
     genderWeight = models.DecimalField(max_digits=11, decimal_places=10)
     preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10)
     suggestedGroup = models.CharField(max_length=10)
@@ -64,8 +61,8 @@ class Supervisor(models.Model):
         return False
 
 class Participant(Person):
-    preferences = models.ManyToManyField(Person)
-    supervisor = models.ForeignKey(Supervisor, on_delete=models.CASCADE)
+    preferences = models.ManyToManyField(Person, related_name="participant_preference")
+    supervisor = models.ForeignKey(SuperVisor_Model, on_delete=models.CASCADE, related_name = "participant_supervisor")
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
 
     def setPreferences(self, participant):

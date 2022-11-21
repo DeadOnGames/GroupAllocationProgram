@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Person, Group, Supervisor, Participant
+from .models import Person, Group, SuperVisor_Model, Participant
 from .GenerateNeighbour import generate_neighbours
 
 # Create your tests here.
@@ -88,7 +88,7 @@ class ParticipantTests(TestCase):
 
         #tests if supervisor is properly assigned to participant
         def test_set_supervisor(self):
-                s = Supervisor.objects.create(group = None, participant = None, genderWeight = None, preferenceWeight = None, suggestedGroup = None)
+                s = SuperVisor_Model.objects.create(group = None, participant = None, genderWeight = None, preferenceWeight = None, suggestedGroup = None)
                 p = Participant.objects.create(preferences = None, supervisor = None, group = None)
                 p.setSupervisor(s)
 
@@ -148,4 +148,3 @@ class GenerateNeighboursTests(TestCase):
     # Test error message if wrong input shape
     def test_wrong_shape(self):
         self.assertEqual("Error: No groups submitted", generate_neighbours([]))
->>>>>>> main
