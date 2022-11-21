@@ -100,3 +100,11 @@ class GenerateNeighboursTests(TestCase):
         test_arr = [[1,2],[3]]
         expected_out = [[[3,2],[1]],[[1,3],[2]]]
         self.assertEquals(generate_neighbours(test_arr),expected_out)
+    #Test correct output for two, two element arrays
+    def test_2_2_element_arrays(self):
+        test_arr = [[1,2],[3,4]]
+        expected_out = [
+            [[3,2],[1,4]],
+            [[4,2],[3,1]]
+            ]
+        self.assertEqual(expected_out,generate_neighbours(test_arr))
