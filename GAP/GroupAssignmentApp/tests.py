@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Person, Group, SuperVisor_Model, Participant
+from .models import Person, Group, Supervisor
 from .GenerateNeighbour import generate_neighbours
+
 
 # Create your tests here.
 class PersonTests(TestCase):
@@ -72,42 +73,6 @@ class GroupTests(TestCase):
         g.unapprove()
         self.assertFalse(g.isApproved)
 
-class ParticipantTests(TestCase):
-        #tests if prefernces are properly set to participant
-        def test_set_preferences(self):
-                p = Participant.objects.create()
-                p1 = Participant.objects.create()
-                p2 = Participant.objects.create()
-                p3 = Participant.objects.create()
-                p.setPreferences(p1)
-                self.assertEqual(p1.email, p.getPreferences()[0].email)
-                p.setPreferences(p2)
-                p.setPreferences(p3)
-
-        #tests if supervisor is properly assigned to participant
-        def test_set_supervisor(self):
-                s = SuperVisor_Model.objects.create(genderWeight = 0.0, preferenceWeight = 0.0, suggestedGroup="b")
-                p = Participant.objects.create()
-                p.setSupervisor(s)
-
-                self.assertEqual(s,p.supervisor)
-
-        #tests if participant is properly added to group
-        def test_assign_group(self):
-                g = Group.objects.create()
-                p = Participant.objects.create()
-                p.assignGroup(g)
-
-                self.assertTrue(p in g.getParticipants())
-
-        #tests if participant is properly removed with removeFromGroup
-        def test_remove_from_group(self):
-                g = Group.objects.create()
-                p = Participant.objects.create(supervisor = None, group = None)
-                p.assignGroup(g)
-                p.removeFromGroup()
-
-                self.assertEqual(0, len(Participant.objects.get(group=g)))
 
 class GenerateNeighboursTests(TestCase):
     # Test out for input array of length one is empty 3d array
