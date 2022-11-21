@@ -92,3 +92,5 @@ class Participant(Person):
 
     def getGroup(self):
         return self.group
+class Allocation(models.Model, list):
+    supervisor = models.ForeignKey(Supervisor_Model, null = True, related_name="allocation_owner",on_delete=models.CASCADE)

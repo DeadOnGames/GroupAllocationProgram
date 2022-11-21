@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Person, Group, Supervisor_Model
+from .models import Person, Group, Supervisor_Model, Allocation
 from .GenerateNeighbour import generate_neighbours
 
 
@@ -74,6 +74,10 @@ class GroupTests(TestCase):
         self.assertFalse(g.isApproved)
 
 
+class AllocationTests(TestCase):
+    def test_create(self):
+        s = Supervisor_Model.objects.create()
+        a = Allocation.objects.create(supervisor=s)
 class GenerateNeighboursTests(TestCase):
     # Test out for input array of length one is empty 3d array
     def test_one_array_input(self):
