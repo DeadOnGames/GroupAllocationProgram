@@ -23,10 +23,11 @@ class Person(models.Model):
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
 
+
 class Group(models.Model):
     size = models.IntegerField(default=4)
     isApproved = models.BooleanField(default=False)
-    task = models.CharField(max_length=50,null=True)
+    task = models.CharField(max_length=50, null=True)
 
     def getScore(self):
         return False
@@ -45,9 +46,10 @@ class Group(models.Model):
 
 
 class SuperVisor_Model(Person):
-    genderWeight = models.DecimalField(max_digits=11, decimal_places=10,default=1)
-    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10,default=1)
-    suggestedGroup = models.CharField(max_length=10,default="")
+    genderWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    suggestedGroup = models.CharField(max_length=10, default="")
+
     def assignGroups(self):
         return False
 
@@ -59,10 +61,19 @@ class SuperVisor_Model(Person):
 
     def getParticipants(self):
         return False
+
+
 class Participant(Person):
-    preferences = models.ManyToManyField(Person, related_name="participant_preference",null=True)
-    supervisor = models.ForeignKey(SuperVisor_Model, on_delete=models.CASCADE, related_name = "participant_supervisor",null=True)
-    group = models.OneToOneField(Group, on_delete=models.CASCADE,null=True)
+    preferences = models.ManyToManyField(
+        Person, related_name="participant_preference", null=True
+    )
+    supervisor = models.ForeignKey(
+        SuperVisor_Model,
+        on_delete=models.CASCADE,
+        related_name="participant_supervisor",
+        null=True,
+    )
+    group = models.OneToOneField(Group, on_delete=models.CASCADE, null=True)
 
     def setPreferences(self, participant):
         self.preferences.add(participant)
