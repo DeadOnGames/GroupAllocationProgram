@@ -29,6 +29,18 @@ class Supervisor_Model(Person):
     preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
     suggestedGroup = models.CharField(max_length=10, default="")
 
+
+    def score_group(self, group_list):
+        m_count = 0
+        f_count = 0
+        s = len(group_list)
+        for p in group_list:
+            if(p.gender == "male"):
+                m_count += 1
+            else:
+                f_count += 1
+        return (self.genderWeight/s) * (s - abs(m_count - s/2) - abs(f_count - (s/2)))
+
     def assignGroups(self):
         return False
 
@@ -83,7 +95,8 @@ class Participant(Person):
         related_name="participant_supervisor",
         null=True,
     )
-    group = models.OneToOneField(Group, on_delete=models.CASCADE, null=True)
+    gender = models.CharField(max_length=8,default="male")
+    group = models.ManyToManyField(Group)
 
     def setPreferences(self, participant):
         self.preferences.add(participant)
