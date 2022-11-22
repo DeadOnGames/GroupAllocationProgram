@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from .models import Person, Group, Supervisor_Model
 from .GenerateNeighbour import generate_neighbours
+from statistics import mode
+from .HillClimb import hill_climb
 
 
 # Create your tests here.
@@ -111,3 +113,37 @@ class GenerateNeighboursTests(TestCase):
     # Test error message if wrong input shape
     def test_wrong_shape(self):
         self.assertEqual("Error: No groups submitted", generate_neighbours([]))
+
+
+class HillClimbTest(TestCase):
+    # Example Eval Function for testing
+    def Eval(node):
+        return mode(map(sum, node))
+
+    # Make 2d array for testing purposes
+    def gen_array(i):
+        arr_out = []
+        for n in range(0, i):
+            arr_out.append([])
+            for m in range(0, 10):
+                arr_out[n].append(100 * n + m)
+        return arr_out
+
+    # Test output same format as input
+    def test_out_same_format_as_input(self):
+        arr = HillClimbTest.gen_array(10)
+        arr_out = hill_climb(arr, HillClimbTest.Eval)
+        self.assertEqual(len(arr_out), len(arr))
+        for i in range(0, 10):
+            self.assertEqual(len(arr[i]), len(arr_out[i]))
+
+    # Ensure Hill climb output better than input
+    def test_improvement_given(self):
+        for i in range(3, 10):
+            arr = HillClimbTest.gen_array(i)
+            self.assertTrue(
+                HillClimbTest.Eval(arr)
+                <= HillClimbTest.Eval(
+                    hill_climb(arr, HillClimbTest.Eval, max_iterations=1)
+                )
+            )
