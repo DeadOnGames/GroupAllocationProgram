@@ -29,17 +29,19 @@ class Supervisor_Model(Person):
     preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
     suggestedGroup = models.CharField(max_length=10, default="")
 
-
+    # First go at score group function, currently only works for gender distribution
     def score_group(self, group_list):
         m_count = 0
         f_count = 0
         s = len(group_list)
         for p in group_list:
-            if(p.gender == "male"):
+            if p.gender == "male":
                 m_count += 1
             else:
                 f_count += 1
-        return (self.genderWeight/s) * (s - abs(m_count - s/2) - abs(f_count - (s/2)))
+        return (self.genderWeight / s) * (
+            s - abs(m_count - s / 2) - abs(f_count - (s / 2))
+        )
 
     def assignGroups(self):
         return False
@@ -54,6 +56,9 @@ class Supervisor_Model(Person):
         return False
 
 
+# An allocation will represent how people are split into groups.
+# An allocation will be a foreign key of a group. Representing a group being in an allocation
+# A supervisor will be a foreign key of an allocation. Representing "ownership" of the supervisor over the allocation
 class Allocation(models.Model):
     supervisor = models.ForeignKey(
         Supervisor_Model,
@@ -95,7 +100,8 @@ class Participant(Person):
         related_name="participant_supervisor",
         null=True,
     )
-    gender = models.CharField(max_length=8,default="male")
+    gender = models.CharField(max_length=8, default="male")
+    # many to many field as each person will be in multiple groups.
     group = models.ManyToManyField(Group)
 
     def setPreferences(self, participant):

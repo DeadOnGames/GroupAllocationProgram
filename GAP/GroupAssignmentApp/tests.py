@@ -85,16 +85,24 @@ class GroupTests(TestCase):
         self.assertEqual(len(Group.objects.all()), 2)
         self.assertEqual(len(a.group_set.all()), 1)
 
+
 class SupervisorTests(TestCase):
     def test_score_group(self):
-        s = Supervisor_Model.objects.create(genderWeight = 1)
-        group_arr = [Participant.objects.create(gender="male"),Participant.objects.create(gender="male"),Participant.objects.create(gender="female"),Participant.objects.create(gender="female")]
-        self.assertEqual(s.score_group(group_arr),1)
+        s = Supervisor_Model.objects.create(genderWeight=1)
+        group_arr = [
+            Participant.objects.create(gender="male"),
+            Participant.objects.create(gender="male"),
+            Participant.objects.create(gender="female"),
+            Participant.objects.create(gender="female"),
+        ]
+        self.assertEqual(s.score_group(group_arr), 1)
         group_arr[0].gender = "female"
-        self.assertEqual(s.score_group(group_arr),0.5)
+        self.assertEqual(s.score_group(group_arr), 0.5)
         group_arr[0].gender = "male"
         group_arr[3].gender = "male"
-        self.assertEqual(s.score_group(group_arr),0.5)
+        self.assertEqual(s.score_group(group_arr), 0.5)
+
+
 class AllocationTests(TestCase):
     def test_create(self):
         s = Supervisor_Model.objects.create()
