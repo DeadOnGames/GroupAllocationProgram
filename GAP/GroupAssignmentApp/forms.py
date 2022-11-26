@@ -16,6 +16,12 @@ class PersonForm(forms.Form):
     last_name = forms.CharField(max_length=20, label="Last Name:")
     wants_notified = forms.BooleanField(label="Notify Me when Groups Allocated:")
     email_address = forms.CharField(max_length=50, label="Email:")
-    preferences = forms.ChoiceField(
-        choices=class_list(), label="Who do you want to work with?"
+    first_preference = forms.TypedChoiceField(
+        choices=class_list(), label="First Preference:"
+    )
+    second_preference = forms.TypedChoiceField(
+        choices=class_list(), label="Second Preference:"
+    )
+    third_preference = forms.TypedChoiceField(
+        choices=class_list(), label="Third Preference:"
     )
