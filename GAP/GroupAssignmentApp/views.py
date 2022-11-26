@@ -6,12 +6,12 @@ from .forms import PersonForm
 def person_details_form(request):
     if request.method == "POST":
         # save data from request to form
-        form = PersonForm(request.post)
+        form = PersonForm(request.POST)
         if form.is_valid:
             return HttpResponseRedirect("/thanks/")
     else:
         form = PersonForm()
-    return render(form, "GAP/participant.html", {"form": form})
+    return render(request, "GAP/participant.html", {"form": form})
 
 
 def person_view(request, person_id):
