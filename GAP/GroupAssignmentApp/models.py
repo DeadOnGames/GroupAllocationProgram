@@ -6,7 +6,7 @@ class Person(models.Model):
     email = models.EmailField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return "Name: {}, Email: {}".format(self.name, self.email)
 
     # define exception for invalid email
     class InvalidEmailException(Exception):
