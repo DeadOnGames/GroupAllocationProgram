@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Person, Group, Supervisor_Model
+from .models import Person, Group, Supervisor_Model, Participant
+from .forms import PersonForm
 from .GenerateNeighbour import generate_neighbours
 from statistics import mode
 from .HillClimb import hill_climb
-
 
 # Create your tests here.
 class PersonTests(TestCase):
@@ -147,3 +147,14 @@ class HillClimbTest(TestCase):
                     hill_climb(arr, HillClimbTest.Eval, max_iterations=1)
                 )
             )
+
+
+# Test PersonForm
+class PersonFormTests(TestCase):
+    def test_class_list_function(self):
+        Participant.objects.create(name="Joe Blogs", email="jb@gmail.com")
+        self.assertEquals(len(PersonForm.class_list()), 1)
+        Participant.objects.create(name="Joe Blogs Senior")
+        self.assertEquals(len(PersonForm.class_list()), 1)
+        Participant.objects.create(name="James Bond", email="jb007@gmail.com")
+        self.assertEquals(len(PersonForm.class_list()), 2)
