@@ -64,9 +64,7 @@ class Supervisor_Model(Person):
 
 
 class Participant(Person):
-    preferences = models.ManyToManyField(
-        Person, related_name="participant_preference", null=True
-    )
+    preferences = models.CharField(max_length=20, default="")
     supervisor = models.ForeignKey(
         Supervisor_Model,
         on_delete=models.CASCADE,

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Person
+from .models import Person, Participant
 from .forms import PersonForm
 
 # Create your views here.
@@ -8,7 +8,8 @@ def person_details_form(request):
     if request.method == "POST":
         # save data from request to form
         form = PersonForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
+            Participant.objects.create(email = form.cleaned_data["email"], name = form.name(), preferences = form.preferences())
             return HttpResponseRedirect("thanks/")
     else:
         form = PersonForm()
