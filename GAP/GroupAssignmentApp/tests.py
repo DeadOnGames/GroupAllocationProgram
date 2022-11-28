@@ -162,6 +162,9 @@ class PersonFormTests(TestCase):
         self.assertEquals(PersonForm.class_list()[1][0], p.id)
     def test_constructor_no_request(self):
         test_form = PersonForm(n_preferences=5)
+        for i in range(0,5):
+            self.assertTrue("preference_{}".format(i) in test_form.fields.keys())
+
 
 
     def test_pick_preferences(self):
@@ -178,9 +181,9 @@ class PersonFormTests(TestCase):
         self.assertEqual(len(part), len(Participant.objects.all()))
 
         request.POST = {
-            "first_preference": part[0].id,
-            "second_preference": part[1].id,
-            "third_preference": part[5].id,
+            "preference_1": part[0].id,
+            "preference_2": part[1].id,
+            "preference_3": part[5].id,
             "first_name": "test",
             "email": "test0@exmaple.co.uk",
             "last_name": "0",
