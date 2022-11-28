@@ -160,12 +160,11 @@ class PersonFormTests(TestCase):
         p = Participant.objects.create(name="James Bond", email="jb007@gmail.com")
         self.assertEquals(len(PersonForm.class_list()), 2)
         self.assertEquals(PersonForm.class_list()[1][0], p.id)
+
     def test_constructor_no_request(self):
         test_form = PersonForm(n_preferences=5)
-        for i in range(0,5):
-            self.assertTrue("preference_{}".format(i+1) in test_form.fields.keys())
-
-
+        for i in range(0, 5):
+            self.assertTrue("preference_{}".format(i + 1) in test_form.fields.keys())
 
     def test_pick_preferences(self):
         # make 6 example participant
@@ -191,6 +190,8 @@ class PersonFormTests(TestCase):
         }
         form = PersonForm(request.POST)
         self.assertTrue(form.is_valid())
-        #correct choice ids
+        # correct choice ids
         choices = [1, 2, 6]
-        self.assertEquals("{},{},{}".format(choices[0],choices[1],choices[2]), form.preferences())
+        self.assertEquals(
+            "{},{},{}".format(choices[0], choices[1], choices[2]), form.preferences()
+        )
