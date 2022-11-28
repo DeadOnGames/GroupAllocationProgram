@@ -43,18 +43,6 @@ class PersonForm(forms.Form):
             return "{},{},{}".format(p1, p2, p3)
         return
 
-    def init_head(self):
-        self.fields["first_preference"] = forms.TypedChoiceField(
-            choices=PersonForm.class_list(), label="First Preference:"
-        )
-        self.fields["second_preference"] = forms.TypedChoiceField(
-            choices=PersonForm.class_list(), label="Second Preference:"
-        )
-
-        self.fields["third_preference"] = forms.TypedChoiceField(
-            choices=PersonForm.class_list(), label="Third Preference:"
-        )
-
     def __init__(self, *args, **kw):
         super(PersonForm, self).__init__(*args, **kw)
         self.fields["first_preference"] = forms.TypedChoiceField(
@@ -66,4 +54,3 @@ class PersonForm(forms.Form):
         self.fields["third_preference"] = forms.TypedChoiceField(
             choices=PersonForm.class_list(), label="Third Preference:"
         )
-        print(self.fields["third_preference"].choices)

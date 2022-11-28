@@ -184,5 +184,7 @@ class PersonFormTests(TestCase):
             "wants_notified": True,
         }
         form = PersonForm(request.POST)
-        form.is_valid()
         self.assertTrue(form.is_valid())
+        #correct choice ids
+        choices = [1, 2, 6]
+        self.assertEquals("{},{},{}".format(choices[0],choices[1],choices[2]), form.preferences())
