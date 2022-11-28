@@ -19,7 +19,7 @@ class PersonTests(TestCase):
         person_count = len(Person.objects.all())
         for i in range(0, 10):
             # Person.objects.create is auto generated constructor, saves instance to data base
-            Person.objects.create(name="test", email="test{0}@domain.com".format(i))
+            Person.objects.create(name="test", email="test{}@domain.com".format(i))
             self.assertEqual(person_count + i + 1, len(Person.objects.all()))
 
     # Test that it is possible to create a Person object, and save it to data base, even if person has no email address
@@ -163,7 +163,7 @@ class PersonFormTests(TestCase):
     def test_constructor_no_request(self):
         test_form = PersonForm(n_preferences=5)
         for i in range(0,5):
-            self.assertTrue("preference_{}".format(i) in test_form.fields.keys())
+            self.assertTrue("preference_{}".format(i+1) in test_form.fields.keys())
 
 
 

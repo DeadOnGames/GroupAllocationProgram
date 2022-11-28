@@ -25,32 +25,19 @@ class PersonForm(forms.Form):
     last_name = forms.CharField(max_length=20, label="Last Name:")
     wants_notified = forms.BooleanField(label="Notify Me when Groups Allocated:")
     email = forms.CharField(max_length=50, label="Email:")
-    first_preference = forms.TypedChoiceField(
-        choices=class_list(), label="First Preference:"
-    )
-    second_preference = forms.TypedChoiceField(
-        choices=class_list(), label="Second Preference:"
-    )
-    third_preference = forms.TypedChoiceField(
-        choices=class_list(), label="Third Preference:"
-    )
-
+    n_preferences = 3
     def preferences(self):
+        out = ""
         if self.is_valid():
-            p1 = self.cleaned_data["first_preference"]
-            p2 = self.cleaned_data["second_preference"]
-            p3 = self.cleaned_data["third_preference"]
-            return "{},{},{}".format(p1, p2, p3)
-        return
+            for i in range(1,self.n_preferences):
+                out+=("{},".format(self.cleaned_data["preference_{}".format(i)]))
+            out+=(str(self.cleaned_data["preference_{}".format(self.n_preferences)]))
+        return out
 
     def __init__(self,*args, n_preferences=3, **kw):
+        self.n_preferences = n_preferences
         super(PersonForm, self).__init__(*args, **kw)
-        self.fields["first_preference"] = forms.TypedChoiceField(
-            choices=PersonForm.class_list(), label="First Preference:"
-        )
-        self.fields["second_preference"] = forms.TypedChoiceField(
-            choices=PersonForm.class_list(), label="Second Preference:"
-        )
-        self.fields["third_preference"] = forms.TypedChoiceField(
-            choices=PersonForm.class_list(), label="Third Preference:"
-        )
+        for i in range(0, n_preferences):
+            self.fields["preference_{}".format(i+1)] = forms.TypedChoiceField(
+                choices=PersonForm.class_list(), label="Preference: {}".format(i+1)
+            )
