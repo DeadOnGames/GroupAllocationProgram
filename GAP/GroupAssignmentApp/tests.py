@@ -160,7 +160,7 @@ class PersonFormTests(TestCase):
         p = Participant.objects.create(name="James Bond", email="jb007@gmail.com")
         self.assertEquals(len(PersonForm.class_list()), 2)
         self.assertEquals(PersonForm.class_list()[1][0], p.id)
-    def test_constructor_no_request():
+    def test_constructor_no_request(self):
         test_form = PersonForm(n_preferences=5)
 
 
