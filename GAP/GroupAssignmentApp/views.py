@@ -9,7 +9,11 @@ def person_details_form(request):
         # save data from request to form
         form = PersonForm(request.POST)
         if form.is_valid():
-            Participant.objects.create(email = form.cleaned_data["email"], name = form.name(), preferences = form.preferences())
+            Participant.objects.create(
+                email=form.cleaned_data["email"],
+                name=form.name(),
+                preferences=form.preferences(),
+            )
             return HttpResponseRedirect("thanks/")
     else:
         form = PersonForm()

@@ -15,8 +15,11 @@ class PersonForm(forms.Form):
             return participants
         except:
             return participants
+
     def name(self):
-        return "{} {}".format(self.cleaned_data["first_name"], self.cleaned_data["last_name"])
+        return "{} {}".format(
+            self.cleaned_data["first_name"], self.cleaned_data["last_name"]
+        )
 
     first_name = forms.CharField(label="First Name:", max_length=20)
     last_name = forms.CharField(max_length=20, label="Last Name:")
@@ -31,10 +34,36 @@ class PersonForm(forms.Form):
     third_preference = forms.TypedChoiceField(
         choices=class_list(), label="Third Preference:"
     )
+
     def preferences(self):
-        if(self.is_valid()):
+        if self.is_valid():
             p1 = self.cleaned_data["first_preference"]
             p2 = self.cleaned_data["second_preference"]
             p3 = self.cleaned_data["third_preference"]
-            return "{},{},{}".format(p1,p2,p3)
+            return "{},{},{}".format(p1, p2, p3)
         return
+
+    def init_head(self):
+        self.fields["first_preference"] = forms.TypedChoiceField(
+            choices=PersonForm.class_list(), label="First Preference:"
+        )
+        self.fields["second_preference"] = forms.TypedChoiceField(
+            choices=PersonForm.class_list(), label="Second Preference:"
+        )
+
+        self.fields["third_preference"] = forms.TypedChoiceField(
+            choices=PersonForm.class_list(), label="Third Preference:"
+        )
+
+    def __init__(self, *args, **kw):
+        super(PersonForm, self).__init__(*args, **kw)
+        self.fields["first_preference"] = forms.TypedChoiceField(
+            choices=PersonForm.class_list(), label="First Preference:"
+        )
+        self.fields["second_preference"] = forms.TypedChoiceField(
+            choices=PersonForm.class_list(), label="Second Preference:"
+        )
+        self.fields["third_preference"] = forms.TypedChoiceField(
+            choices=PersonForm.class_list(), label="Third Preference:"
+        )
+        print(self.fields["third_preference"].choices)

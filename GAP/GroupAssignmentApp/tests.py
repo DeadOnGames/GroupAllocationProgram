@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.http import HttpRequest
 from .models import Person, Group, Supervisor_Model, Participant
 from .forms import PersonForm
 from .GenerateNeighbour import generate_neighbours
@@ -9,9 +10,9 @@ from .HillClimb import hill_climb
 # Create your tests here.
 class PersonTests(TestCase):
     # Test that string cast method returns name of Person.
-    def test_string_cast_returns_name(self):
-        person = Person(name="Test Person")
-        self.assertEqual("Test Person", str(person))
+    def test_string_cast_returns_name_and_email(self):
+        person = Person(name="Test Person", email="tp@domain.com")
+        self.assertEqual("Name: Test Person, Email: tp@domain.com", str(person))
 
     # Test that creation of person object saves new person to the Data Base.
     def test_create_person(self):
@@ -156,5 +157,32 @@ class PersonFormTests(TestCase):
         self.assertEquals(len(PersonForm.class_list()), 1)
         Participant.objects.create(name="Joe Blogs Senior")
         self.assertEquals(len(PersonForm.class_list()), 1)
-        Participant.objects.create(name="James Bond", email="jb007@gmail.com")
+        p = Participant.objects.create(name="James Bond", email="jb007@gmail.com")
         self.assertEquals(len(PersonForm.class_list()), 2)
+        self.assertEquals(PersonForm.class_list()[1][0], p.id)
+
+    def test_pick_preferences(self):
+        # make 6 example participant
+        part = []
+        for i in range(0, 6):
+            part.append(
+                Participant.objects.create(
+                    name="test {}".format(i), email="test{}@example.co.uk".format(i)
+                )
+            )
+        # select preferences in request
+        request = HttpRequest()
+        self.assertEqual(len(part), len(Participant.objects.all()))
+
+        request.POST = {
+            "first_preference": part[0].id,
+            "second_preference": part[1].id,
+            "third_preference": part[5].id,
+            "first_name": "test",
+            "email": "test0@exmaple.co.uk",
+            "last_name": "0",
+            "wants_notified": True,
+        }
+        form = PersonForm(request.POST)
+        form.is_valid()
+        self.assertTrue(form.is_valid())
