@@ -6,7 +6,7 @@ class Person(models.Model):
     email = models.EmailField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return "Name: {}, Email: {}".format(self.name, self.email)
 
     # define exception for invalid email
     class InvalidEmailException(Exception):
@@ -64,9 +64,7 @@ class Supervisor_Model(Person):
 
 
 class Participant(Person):
-    preferences = models.ManyToManyField(
-        Person, related_name="participant_preference", null=True
-    )
+    preferences = models.CharField(max_length=20, default="")
     supervisor = models.ForeignKey(
         Supervisor_Model,
         on_delete=models.CASCADE,
