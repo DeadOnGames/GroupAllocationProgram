@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.http import HttpRequest
-from .models import Person, Group, Supervisor_Model, Participant
+from .models import Person, Group, Supervisor_Model, Participant, Allocation
 from .forms import PersonForm
 from .GenerateNeighbour import generate_neighbours
 from statistics import mode
