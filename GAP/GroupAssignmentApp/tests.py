@@ -1,24 +1,25 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Person, Group, Supervisor_Model, Allocation, Participant
+from django.http import HttpRequest
+from .models import Person, Group, Supervisor_Model, Participant
+from .forms import PersonForm
 from .GenerateNeighbour import generate_neighbours
 from statistics import mode
 from .HillClimb import hill_climb
 
-
 # Create your tests here.
 class PersonTests(TestCase):
     # Test that string cast method returns name of Person.
-    def test_string_cast_returns_name(self):
-        person = Person(name="Test Person")
-        self.assertEqual("Test Person", str(person))
+    def test_string_cast_returns_name_and_email(self):
+        person = Person(name="Test Person", email="tp@domain.com")
+        self.assertEqual("Name: Test Person, Email: tp@domain.com", str(person))
 
     # Test that creation of person object saves new person to the Data Base.
     def test_create_person(self):
         person_count = len(Person.objects.all())
         for i in range(0, 10):
             # Person.objects.create is auto generated constructor, saves instance to data base
-            Person.objects.create(name="test", email="test{0}@domain.com".format(i))
+            Person.objects.create(name="test", email="test{}@domain.com".format(i))
             self.assertEqual(person_count + i + 1, len(Person.objects.all()))
 
     # Test that it is possible to create a Person object, and save it to data base, even if person has no email address
@@ -180,3 +181,50 @@ class HillClimbTest(TestCase):
                     hill_climb(arr, HillClimbTest.Eval, max_iterations=1)
                 )
             )
+
+
+# Test PersonForm
+class PersonFormTests(TestCase):
+    def test_class_list_function(self):
+        Participant.objects.create(name="Joe Blogs", email="jb@gmail.com")
+        self.assertEquals(len(PersonForm.class_list()), 1)
+        Participant.objects.create(name="Joe Blogs Senior")
+        self.assertEquals(len(PersonForm.class_list()), 1)
+        p = Participant.objects.create(name="James Bond", email="jb007@gmail.com")
+        self.assertEquals(len(PersonForm.class_list()), 2)
+        self.assertEquals(PersonForm.class_list()[1][0], p.id)
+
+    def test_constructor_no_request(self):
+        test_form = PersonForm(n_preferences=5)
+        for i in range(0, 5):
+            self.assertTrue("preference_{}".format(i + 1) in test_form.fields.keys())
+
+    def test_pick_preferences(self):
+        # make 6 example participant
+        part = []
+        for i in range(0, 6):
+            part.append(
+                Participant.objects.create(
+                    name="test {}".format(i), email="test{}@example.co.uk".format(i)
+                )
+            )
+        # select preferences in request
+        request = HttpRequest()
+        self.assertEqual(len(part), len(Participant.objects.all()))
+
+        request.POST = {
+            "preference_1": part[0].id,
+            "preference_2": part[1].id,
+            "preference_3": part[5].id,
+            "first_name": "test",
+            "email": "test0@exmaple.co.uk",
+            "last_name": "0",
+            "wants_notified": True,
+        }
+        form = PersonForm(request.POST)
+        self.assertTrue(form.is_valid())
+        # correct choice ids
+        choices = [1, 2, 6]
+        self.assertEquals(
+            "{},{},{}".format(choices[0], choices[1], choices[2]), form.preferences()
+        )
