@@ -1,4 +1,5 @@
 from django.db import models
+import re
 
 # Create your models here.
 class Person(models.Model):
@@ -12,6 +13,7 @@ class Person(models.Model):
     class InvalidEmailException(Exception):
         message = "Email Invalid or Already Used"
 
+
     # Override Save method
     def save(self, *args, **kwargs):
         if self.email == "" or self.email == None:
@@ -19,7 +21,11 @@ class Person(models.Model):
             return
         try:
             Person.objects.get(email=self.email)
-            raise Person.InvalidEmailException
+            expression = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+            if (re.fullmatch(expression, self.email)):
+                super(Person, self).save(*args, **kwargs)
+            else:
+                raise Person.InvalidEmailException
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
 
