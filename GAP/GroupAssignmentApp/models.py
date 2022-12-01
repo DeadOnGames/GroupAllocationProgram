@@ -21,10 +21,14 @@ class Person(models.Model):
             return
         try:
             Person.objects.get(email=self.email)
+            # define an expression to validate email against
             expression = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+            # compare input email to validation expression
             if (re.fullmatch(expression, self.email)):
+                # if matches, save as email
                 super(Person, self).save(*args, **kwargs)
             else:
+                # if it doesn't match, raise exception and produce error message
                 raise Person.InvalidEmailException
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
