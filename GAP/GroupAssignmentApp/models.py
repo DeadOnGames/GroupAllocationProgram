@@ -25,7 +25,7 @@ class Person(models.Model):
             expression = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
             # compare input email to validation expression
             if (re.fullmatch(expression, self.email)):
-                # if matches, save as email
+                # if input passes validation, save as email
                 super(Person, self).save(*args, **kwargs)
             else:
                 # if it doesn't match, raise exception and produce error message
