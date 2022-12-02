@@ -13,7 +13,6 @@ class Person(models.Model):
     class InvalidEmailException(Exception):
         message = "Email Invalid or Already Used"
 
-
     # Override Save method
     def save(self, *args, **kwargs):
         if self.email == "" or self.email == None:
@@ -23,7 +22,7 @@ class Person(models.Model):
             Person.objects.get(email=self.email)
             # define an expression to validate email
             expression = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-            # compare input email to validation expression
+            # compare input email to the validation expression
             if (re.fullmatch(expression, self.email)):
                 # if input passes validation, save as email
                 super(Person, self).save(*args, **kwargs)
@@ -33,7 +32,6 @@ class Person(models.Model):
                 raise Person.InvalidEmailException
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
-
 
 class Group(models.Model):
     size = models.IntegerField(default=4)
@@ -55,7 +53,6 @@ class Group(models.Model):
     def __str__(self):
         return f"Is the group approved?{self.isApproved}"
 
-
 class Supervisor_Model(Person):
     genderWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
     preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
@@ -72,7 +69,6 @@ class Supervisor_Model(Person):
 
     def getParticipants(self):
         return False
-
 
 class Participant(Person):
     preferences = models.CharField(max_length=20, default="")
