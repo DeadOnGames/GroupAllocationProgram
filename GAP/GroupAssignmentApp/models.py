@@ -1,4 +1,5 @@
 from django.db import models
+import csv
 
 # Create your models here.
 class Person(models.Model):
@@ -18,8 +19,10 @@ class Person(models.Model):
             super(Person, self).save(*args, **kwargs)
             return
         try:
-            Person.objects.get(email=self.email)
-            raise Person.InvalidEmailException
+            if self.pk == Person.objects.get(email=self.email).pk:
+                super(Person, self).save(*args, **kwargs)
+            else:
+                raise Person.InvalidEmailException
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
 
@@ -119,3 +122,18 @@ class Participant(Person):
 
     def getGroup(self):
         return self.group
+
+    def LoadCsv(supervisor):
+        with open("GroupAssignmentApp/demo_participants.csv", newline="") as csvfile:
+            participants = csv.reader(csvfile, delimiter=",", quotechar='"')
+            next(participants, None)
+            preferences = []
+            for row in participants:
+                p = Participant.objects.create(
+                    supervisor=supervisor, name=row[0], email=row[1], gender=row[2]
+                )
+                preferences.append((p, "{},{},{}".format(row[3], row[4], row[5])))
+            for p in preferences:
+                p[0].preferences = p[1]
+                p[0].save()
+                print("{},{}".format(p[0], p[1]))
