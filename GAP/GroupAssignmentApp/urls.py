@@ -5,7 +5,7 @@ app_name = "gaa"
 urlpatterns = [
     path("user/<int:person_id>/", views.person_view, name="user"),
     path(
-        "user/register_participant/", views.person_details_form, name="person_details"
+        "<int:supervisor_id>/register_participant/", views.person_details_form, name="person_details"
     ),
     path(
         "user/register_participant/thanks/",

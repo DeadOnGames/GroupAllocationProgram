@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Person, Participant
+from .models import Person, Participant, Supervisor_Model
 from .forms import PersonForm
 
 # Create your views here.
-def person_details_form(request):
+def person_details_form(request, supervisor_id):
     if request.method == "POST":
         # save data from request to form
         form = PersonForm(request.POST)
@@ -13,11 +13,12 @@ def person_details_form(request):
                 email=form.cleaned_data["email"],
                 name=form.name(),
                 preferences=form.preferences(),
+                supervisor = Supervisor_Model.objects.get(pk=supervisor_id)
             )
             return HttpResponseRedirect("thanks/")
     else:
         form = PersonForm()
-    return render(request, "GAP/participant.html", {"form": form})
+    return render(request, "GAP/participant.html", {"form": form, "supervisor_id": supervisor_id})
 
 
 def person_view(request, person_id):
