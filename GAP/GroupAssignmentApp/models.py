@@ -28,8 +28,9 @@ class Person(models.Model):
 
 
 class Supervisor_Model(Person):
-    genderWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
-    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    group_size = models.IntegerField(default=2)
+    gender_weight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    preference_weight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
     suggestedGroup = models.CharField(max_length=10, default="")
 
     # First go at score group function, currently only works for gender distribution
@@ -42,7 +43,7 @@ class Supervisor_Model(Person):
                 m_count += 1
             else:
                 f_count += 1
-        return (self.genderWeight / s) * (
+        return (self.gender_weight / s) * (
             s - abs(m_count - s / 2) - abs(f_count - (s / 2))
         )
 

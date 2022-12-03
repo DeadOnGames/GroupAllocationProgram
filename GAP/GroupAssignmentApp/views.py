@@ -40,6 +40,16 @@ def person_view(request, person_id):
     person = get_object_or_404(Person, pk=person_id)
     context = {"name": person.name, "email": person.email}
     return render(request, "GAP/user.html", context)
+def register_supervisor(request):
+    message=""
+    if request.method == "POST":
+        try:
+            supervisor = Supervisor_Model.objects.create(name=request.POST["name"],email=request.POST["email"],group_size=request.POST["group_size"],gender_weight=request.POST["gender_weight"],preference_weight=request.POST["preference_weight"])
+            message = "You've registered succesfully"
+        except Exception as e:
+            message = str(request.POST.keys()) + str(e)
+    return render(request, "GAP/supervisor.html",{"weight_min": 0, "weight_max": 10, "message": message })
+
 
 
 def participant_registration_success(request,supervisor_id):
