@@ -8,7 +8,7 @@ urlpatterns = [
         "<int:supervisor_id>/register_participant/", views.person_details_form, name="person_details"
     ),
     path(
-        "user/register_participant/thanks/",
+        "<int:supervisor_id>/register_participant/thanks/",
         views.participant_registration_success,
         name="thanks",
     ),
