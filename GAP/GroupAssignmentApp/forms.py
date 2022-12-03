@@ -2,7 +2,8 @@ from django import forms
 from .models import Participant
 
 
-class PersonForm(forms.Form):
+class PreferencesForm(forms.Form):
+    n_preferences = 3
     def class_list():
         participants = []
         i = 1
@@ -15,18 +16,6 @@ class PersonForm(forms.Form):
             return participants
         except:
             return participants
-
-    def name(self):
-        return "{} {}".format(
-            self.cleaned_data["first_name"], self.cleaned_data["last_name"]
-        )
-
-    first_name = forms.CharField(label="First Name:", max_length=20)
-    last_name = forms.CharField(max_length=20, label="Last Name:")
-    wants_notified = forms.BooleanField(label="Notify Me when Groups Allocated:")
-    email = forms.CharField(max_length=50, label="Email:")
-    n_preferences = 3
-
     def preferences(self):
         out = ""
         if self.is_valid():
@@ -37,8 +26,17 @@ class PersonForm(forms.Form):
 
     def __init__(self, *args, n_preferences=3, **kw):
         self.n_preferences = n_preferences
-        super(PersonForm, self).__init__(*args, **kw)
+        super(PreferencesForm, self).__init__(*args, **kw)
         for i in range(0, n_preferences):
             self.fields["preference_{}".format(i + 1)] = forms.TypedChoiceField(
-                choices=PersonForm.class_list(), label="Preference: {}".format(i + 1)
+                choices=PreferencesForm.class_list(), label="Preference: {}".format(i + 1)
             )
+class ParticipantForm(forms.Form):
+    first_name = forms.CharField(label="First Name:", max_length=20)
+    last_name = forms.CharField(max_length=20, label="Last Name:")
+    wants_notified = forms.BooleanField(label="Notify Me when Groups Allocated:")
+    email = forms.CharField(max_length=50, label="Email:")
+    def name(self):
+        return "{} {}".format(
+            self.cleaned_data["first_name"], self.cleaned_data["last_name"]
+        )
