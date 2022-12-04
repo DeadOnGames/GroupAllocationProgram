@@ -1,7 +1,6 @@
 import sys
 from .GenerateNeighbour import generate_neighbours
 from copy import deepcopy
-from statistics import mode
 
 
 def hill_climb(start_node, EVAL_HILL_CLIMB, max_iterations=10):

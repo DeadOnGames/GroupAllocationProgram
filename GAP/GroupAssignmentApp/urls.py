@@ -7,12 +7,17 @@ urlpatterns = [
     path("register_supervisor/", views.register_supervisor, name="register_supervisor"),
     path("participant/<int:participant_id>/preferences/", views.participant_preference_form, name="preferences"),
     path(
-        "<int:supervisor_id>/register_participant/", views.person_details_form, name="person_details"
+        "supervisor/<int:supervisor_id>/register_participant/", views.person_details_form, name="person_details"
     ),
     path(
-        "<int:supervisor_id>/register_participant/thanks/",
+        "supervisor/<int:supervisor_id>/register_participant/thanks/",
         views.participant_registration_success,
         name="thanks",
+    ),
+    path(
+        "supervisor/<int:supervisor_id>/assign_groups/",
+        views.assign_groups,
+        name="assign_groups",
     ),
     path(
         "<int:participant_id>/preferences/thanks",

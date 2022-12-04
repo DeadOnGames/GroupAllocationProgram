@@ -54,3 +54,15 @@ def register_supervisor(request):
 
 def participant_registration_success(request,supervisor_id):
     return render(request, "GAP/participant_registration_success.html")
+def assign_groups(request,supervisor_id):
+    message=""
+    if request.method == "POST":
+        try:
+            supervisor = Supervisor_Model.objects.get(pk=supervisor_id)
+            supervisor.group_size = request.POST("group_size")
+            supervisor.gender_weight = request.POST("gender_weight")
+            supervisor.preference_weight = request.POST("preference_weight")
+            supervisor.save()
+        except Exception as e:
+            message = str(e)
+    return render(request, "GAP/supervisor_control.html")

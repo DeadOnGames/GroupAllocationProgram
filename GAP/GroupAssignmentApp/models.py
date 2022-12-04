@@ -1,5 +1,8 @@
 from django.db import models
 import csv
+from .HillClimb import hill_climb
+from statistics import mean
+from decimal import Decimal
 
 # Create your models here.
 class Person(models.Model):
@@ -43,12 +46,28 @@ class Supervisor_Model(Person):
                 m_count += 1
             else:
                 f_count += 1
-        return (self.gender_weight / s) * (
+        return Decimal(self.gender_weight / s) * Decimal(
             s - abs(m_count - s / 2) - abs(f_count - (s / 2))
         )
+    def score_allocation(self, allocation):
+        return mean(map(self.score_group, allocation))
 
-    def assignGroups(self):
-        return False
+    def assign_groups(self):
+        proposed_allocation =[]
+        participants = Participant.objects.filter(supervisor=self)
+        for i in range(0,len(participants)//self.group_size):
+            group = []
+            for j in range(0,self.group_size):
+                group.append(participants[i*self.group_size + j])
+            proposed_allocation.append(group)
+        #Deal with remainder group
+        size = len(participants) % self.group_size
+        proposed_allocation.append(participants[len(participants)-size:len(participants)])
+        #run hill climb
+        proposed_allocation = hill_climb(proposed_allocation,self.score_allocation)
+        return proposed_allocation
+
+
 
     def approveGroups(self):
         return False
