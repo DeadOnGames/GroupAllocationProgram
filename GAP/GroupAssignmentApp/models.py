@@ -65,7 +65,9 @@ class Supervisor_Model(Person):
         proposed_allocation.append(participants[len(participants)-size:len(participants)])
         #run hill climb
         proposed_allocation = hill_climb(proposed_allocation,self.score_allocation)
-        return proposed_allocation
+        #create allocation object
+        Allocation.FromList(self, proposed_allocation)
+        return self.score_allocation(proposed_allocation)
 
 
 
@@ -89,6 +91,13 @@ class Allocation(models.Model):
         related_name="allocation_owner",
         on_delete=models.CASCADE,
     )
+    def FromList(supervisor, allocation_list):
+        allocation = Allocation.objects.create(supervisor = supervisor)
+        for g in allocation_list:
+            group = Group.objects.create(size = supervisor.group_size, allocation=allocation)
+            for participant in g:
+                participant.group.add(group)
+
 
 
 class Group(models.Model):
