@@ -36,6 +36,7 @@ class ParticipantForm(forms.Form):
     last_name = forms.CharField(max_length=20, label="Last Name:")
     wants_notified = forms.BooleanField(label="Notify Me when Groups Allocated:")
     email = forms.CharField(max_length=50, label="Email:")
+    gender = forms.ChoiceField(choices=[("male","Male"),("female","Female")],label="Gender")
     def name(self):
         return "{} {}".format(
             self.cleaned_data["first_name"], self.cleaned_data["last_name"]

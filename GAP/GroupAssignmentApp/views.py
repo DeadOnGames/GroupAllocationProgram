@@ -15,6 +15,7 @@ def person_details_form(request, supervisor_id):
             try:
                 Participant.objects.create(
                     email=form.cleaned_data["email"],
+                    gender = form.cleaned_data["gender"],
                     name=form.name(),
                     supervisor = Supervisor_Model.objects.get(pk=supervisor_id)
                 )
@@ -48,9 +49,12 @@ def register_supervisor(request):
         try:
             supervisor = Supervisor_Model.objects.create(name=request.POST["name"],email=request.POST["email"],group_size=request.POST["group_size"],gender_weight=request.POST["gender_weight"],preference_weight=request.POST["preference_weight"])
             message = "You've registered succesfully"
+            return HttpResponseRedirect("{}/thanks/".format(supervisor.id))
         except Exception as e:
-            message = str(request.POST.keys()) + str(e)
+            message = e
     return render(request, "GAP/supervisor.html",{"weight_min": 0, "weight_max": 10, "message": message })
+def supervisor_thanks(request, supervisor_id):
+    return render(request, "GAP/supervisor_registration_success.html",{"supervisor_id":supervisor_id})
 
 
 

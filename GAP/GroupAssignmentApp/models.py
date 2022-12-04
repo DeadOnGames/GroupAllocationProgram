@@ -46,9 +46,19 @@ class Supervisor_Model(Person):
                 m_count += 1
             else:
                 f_count += 1
+        realized_preferences = 0
+        for p in group_list:
+            preference_ids = p.preferences.split(",")
+            for i in range(0, len(preference_ids)):
+                try:
+                    if Participant.objects.get(pk = int(preference_ids[i])) in group_list:
+                        realized_preferences += len(preference_ids)-1
+                except:
+                    realized_preferences += 0
+
         return Decimal(self.gender_weight / s) * Decimal(
             s - abs(m_count - s / 2) - abs(f_count - (s / 2))
-        )
+        ) + Decimal(self.preference_weight / (s * 6)) * realized_preferences
     def score_allocation(self, allocation):
         return mean(map(self.score_group, allocation))
     def make_group_list(self):
