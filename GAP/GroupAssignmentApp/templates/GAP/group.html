@@ -16,35 +16,12 @@
   <link rel="stylesheet" href="{% static 'GAP/wireframe.css' %}">
 </head>
 <body class="bg-light">
-<h1> {{ name }}</h1>
-<h2> Allocate Groups </h2>
-<form class="needs-validation" novalidate="" action="/gaa/supervisor/{{supervisor_id}}/assign_groups/" method="post">
-       {%csrf_token%}
-<fieldset>
-                      <div class="mb-3">
-                            <label for="email">Group Size<span class="text-muted"></span></label>
-                            <input type="number" class="form-control" name="group_size" min="1" required="required" value="{{group_size}}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email">Gender weight&nbsp;<span class="text-muted"></span></label>
-                            <input type="range" name="gender_weight" min="{{ weight_min }}" max="{{ weight_max  }}" value = "{{gender_weight}}">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email">Preference weight<span class="text-muted"></span></label>
-                            <input type="range" name="preference_weight" min="{{ weight_min }}" max="{{ weight_max  }}" value = "{{preference_weight}}">
-                        </div>
-</fieldset>
-            	<input class="btn btn-lg btn-block btn-dark" type="submit" value="Submit">
-                    </form>
-                    <p> {{ message }}</p>
-
-
-
-      <ul>
-          {% for group in groups %}
-                  <li><a href="/gaa/group/{{ group.id }}/">{{ group.name }}</a></li>
-                      {% endfor %}
-                          </ul>
+<h1> {{ group.name }}</h1>
+    <ul>
+        {% for participant in group.members %}
+                <li>{{  participant}}</li>
+                    {% endfor %}
+                        </ul>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

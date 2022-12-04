@@ -51,8 +51,7 @@ class Supervisor_Model(Person):
         )
     def score_allocation(self, allocation):
         return mean(map(self.score_group, allocation))
-
-    def assign_groups(self):
+    def make_group_list(self):
         proposed_allocation =[]
         participants = Participant.objects.filter(supervisor=self)
         for i in range(0,len(participants)//self.group_size):
@@ -62,12 +61,16 @@ class Supervisor_Model(Person):
             proposed_allocation.append(group)
         #Deal with remainder group
         size = len(participants) % self.group_size
-        proposed_allocation.append(participants[len(participants)-size:len(participants)])
-        #run hill climb
+        if(size !=0):
+            proposed_allocation.append(participants[len(participants)-size:len(participants)])
+        return proposed_allocation
+
+    def assign_groups(self):
+        proposed_allocation = self.make_group_list()
         proposed_allocation = hill_climb(proposed_allocation,self.score_allocation)
         #create allocation object
-        Allocation.FromList(self, proposed_allocation)
-        return self.score_allocation(proposed_allocation)
+        allocation = Allocation.FromList(self, proposed_allocation)
+        return (self.score_allocation(proposed_allocation), allocation)
 
 
 
@@ -91,16 +94,19 @@ class Allocation(models.Model):
         related_name="allocation_owner",
         on_delete=models.CASCADE,
     )
-    def FromList(supervisor, allocation_list):
+    def groups(self):
+        return Group.objects.filter(allocation = self)
+    def FromList(supervisor, allocation_list,group_name="Group {}:"):
         allocation = Allocation.objects.create(supervisor = supervisor)
-        for g in allocation_list:
-            group = Group.objects.create(size = supervisor.group_size, allocation=allocation)
-            for participant in g:
-                participant.group.add(group)
-
+        for i in range(0,len(allocation_list)):
+            group = Group.objects.create(size = supervisor.group_size, allocation=allocation,name=group_name.format(str(i+1)))
+            for j in range(0, len(allocation_list[i])):
+                allocation_list[i][j].group.add(group)
+        return allocation
 
 
 class Group(models.Model):
+    name = models.CharField(null=True, max_length = 50)
     size = models.IntegerField(default=4)
     isApproved = models.BooleanField(default=False)
     task = models.CharField(max_length=50, null=True)
@@ -109,8 +115,8 @@ class Group(models.Model):
     def getScore(self):
         return False
 
-    def getParticipants(self):
-        return Participant.objects.get(group=self)
+    def members(self):
+        return Participant.objects.filter(group=self)
 
     def approve(self):
         self.isApproved = True
@@ -165,4 +171,3 @@ class Participant(Person):
             for p in preferences:
                 p[0].preferences = p[1]
                 p[0].save()
-                print("{},{}".format(p[0], p[1]))

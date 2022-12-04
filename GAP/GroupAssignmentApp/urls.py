@@ -24,5 +24,10 @@ urlpatterns = [
         views.participant_registration_success,
         name="thanks",
     ),
+    path(
+        "group/<int:group_id>/",
+        views.group_view,
+        name="group"
+        ),
 
 ]

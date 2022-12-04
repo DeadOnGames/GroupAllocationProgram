@@ -83,7 +83,7 @@ class GroupTests(TestCase):
         g.allocation = a
         g.save()
         g1 = Group.objects.create()
-        self.assertEqual(len(Group.objects.all()), 2)
+
         self.assertEqual(len(a.group_set.all()), 1)
 
 
@@ -102,7 +102,29 @@ class SupervisorTests(TestCase):
         group_arr[0].gender = "male"
         group_arr[3].gender = "male"
         self.assertEqual(s.score_group(group_arr), 0.5)
+    def test_make_group_list(self):
+        s = Supervisor_Model.objects.create(gender_weight=5, name="Super Visor", email = "sv@gmail.com")
+        for i in range(0,5):
+            Participant.objects.create(gender="male",name="jeff{}".format(i), supervisor = s)
+        for i in range(0,5):
+            Participant.objects.create(gender="female",name="jane{}".format(i), supervisor = s)
+        for i in range(0,20):
+            s.group_size = i+1
+            group_list =s.make_group_list()
+            self.assertFalse(group_list is None)
+            self.assertFalse(len(group_list) == 0)
+            for group in group_list:
+                self.assertFalse(len(group) == 0)
 
+    def test_assign_groups_gender_weight(self):
+        s = Supervisor_Model.objects.create(gender_weight=5, name="Super Visor", email = "sv@gmail.com")
+        for i in range(0,5):
+            Participant.objects.create(gender="male",name="jeff{}".format(i), supervisor = s)
+        for i in range(0,5):
+            Participant.objects.create(gender="female",name="jane{}".format(i), supervisor = s)
+        for i in range(0,20):
+            s.group_size = i+1
+            s.assign_groups()
 
 class AllocationTests(TestCase):
     def test_create(self):
@@ -115,7 +137,7 @@ class GenerateNeighboursTests(TestCase):
     def test_one_array_input(self):
         test_arr = [[1, 2, 3]]
         nhbrs = generate_neighbours(test_arr)
-        self.assertEqual(nhbrs, [[[]]])
+        self.assertEqual(nhbrs, [test_arr])
 
     # Test that Input is not included as neighbour
     def test_input_not_included(self):

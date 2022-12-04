@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from .models import Person, Participant, Supervisor_Model
+from .models import Person, Participant, Supervisor_Model,Group
 from .forms import PreferencesForm,ParticipantForm
+import sys
+from decimal import Decimal
 
 # Create your views here.
 def person_details_form(request, supervisor_id):
@@ -56,13 +58,17 @@ def participant_registration_success(request,supervisor_id):
     return render(request, "GAP/participant_registration_success.html")
 def assign_groups(request,supervisor_id):
     message=""
-    if request.method == "POST":
-        try:
-            supervisor = Supervisor_Model.objects.get(pk=supervisor_id)
-            supervisor.group_size = request.POST("group_size")
-            supervisor.gender_weight = request.POST("gender_weight")
-            supervisor.preference_weight = request.POST("preference_weight")
+    if True:
+        supervisor = Supervisor_Model.objects.get(pk=supervisor_id)
+        if request.method == "POST":
+            supervisor.group_size = int(request.POST["group_size"])
+
+            supervisor.gender_weight = Decimal(request.POST["gender_weight"]) / 10
+            supervisor.preference_weight = Decimal(request.POST["preference_weight"]) / 10
             supervisor.save()
-        except Exception as e:
-            message = str(e)
-    return render(request, "GAP/supervisor_control.html")
+        score,allocation = supervisor.assign_groups()
+        message = "Allocation Score: {}".format(score)
+        return render(request, "GAP/supervisor_control.html", {"groups":allocation.groups(),"message":message, "supervisor_id" : supervisor_id, "weight_min" : 0, "weight_max": 10, "gender_weight" : int(supervisor.gender_weight *10), "preference_weight": int(supervisor.preference_weight *10), "group_size": supervisor.group_size})
+    return render(request, "GAP/supervisor_control.html", {"message":message,"supervisor_id" : supervisor_id, "weight_min" : 0, "weight_max": 10})
+def group_view(request, group_id): 
+    return render(request, "GAP/group.html",{"group": Group.objects.get(pk=group_id)  })
