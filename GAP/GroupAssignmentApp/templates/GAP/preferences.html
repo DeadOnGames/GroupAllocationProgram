@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- PAGE settings -->
   <link rel="icon" href="https://templates.pingendo.com/assets/Pingendo_favicon.ico">
-  <title>GRÜPPE</title>
+  <title>Checkout</title>
   <meta name="description" content="Wireframe design of a checkout form by Pingendo">
   <meta name="keywords" content="Pingendo bootstrap example template wireframe checkout form">
   <meta name="author" content="Pingendo">
@@ -32,13 +32,13 @@
       <div class="row">
         <div class="col-md-12 order-md-1">
           <h4 class="mb-3"><b>Information</b></h4>
-            <form action="/gaa/supervisor/{{ supervisor_id }}/register_participant/" method="post">
+            <form action="/gaa/participant/{{ participant_id }}/preferences/" method="post">
             {%csrf_token%}
             {{ form }}
             <input type="submit" value="Submit">
             </form>
-<p style="color:red;">
-{{ error_message}}
+<p>
+{{ message }}
 </p>
         </div>
       </div>

@@ -1,4 +1,8 @@
 from django.db import models
+import csv
+from .HillClimb import hill_climb
+from statistics import mean
+from decimal import Decimal
 
 # Create your models here.
 class Person(models.Model):
@@ -18,15 +22,18 @@ class Person(models.Model):
             super(Person, self).save(*args, **kwargs)
             return
         try:
-            Person.objects.get(email=self.email)
-            raise Person.InvalidEmailException
+            if self.pk == Person.objects.get(email=self.email).pk:
+                super(Person, self).save(*args, **kwargs)
+            else:
+                raise Person.InvalidEmailException
         except Person.DoesNotExist:
             super(Person, self).save(*args, **kwargs)
 
 
 class Supervisor_Model(Person):
-    genderWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
-    preferenceWeight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    group_size = models.IntegerField(default=2)
+    gender_weight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
+    preference_weight = models.DecimalField(max_digits=11, decimal_places=10, default=1)
     suggestedGroup = models.CharField(max_length=10, default="")
 
     # First go at score group function, currently only works for gender distribution
@@ -39,12 +46,43 @@ class Supervisor_Model(Person):
                 m_count += 1
             else:
                 f_count += 1
-        return (self.genderWeight / s) * (
-            s - abs(m_count - s / 2) - abs(f_count - (s / 2))
-        )
+        realized_preferences = 0
+        for p in group_list:
+            preference_ids = p.preferences.split(",")
+            for i in range(0, len(preference_ids)):
+                try:
+                    if Participant.objects.get(pk = int(preference_ids[i])) in group_list:
+                        realized_preferences += len(preference_ids)-1
+                except:
+                    realized_preferences += 0
 
-    def assignGroups(self):
-        return False
+        return Decimal(self.gender_weight / s) * Decimal(
+            s - abs(m_count - s / 2) - abs(f_count - (s / 2))
+        ) + Decimal(self.preference_weight / (s * 6)) * realized_preferences
+    def score_allocation(self, allocation):
+        return mean(map(self.score_group, allocation))
+    def make_group_list(self):
+        proposed_allocation =[]
+        participants = Participant.objects.filter(supervisor=self)
+        for i in range(0,len(participants)//self.group_size):
+            group = []
+            for j in range(0,self.group_size):
+                group.append(participants[i*self.group_size + j])
+            proposed_allocation.append(group)
+        #Deal with remainder group
+        size = len(participants) % self.group_size
+        if(size !=0):
+            proposed_allocation.append(participants[len(participants)-size:len(participants)])
+        return proposed_allocation
+
+    def assign_groups(self):
+        proposed_allocation = self.make_group_list()
+        proposed_allocation = hill_climb(proposed_allocation,self.score_allocation)
+        #create allocation object
+        allocation = Allocation.FromList(self, proposed_allocation)
+        return (self.score_allocation(proposed_allocation), allocation)
+
+
 
     def approveGroups(self):
         return False
@@ -66,9 +104,19 @@ class Allocation(models.Model):
         related_name="allocation_owner",
         on_delete=models.CASCADE,
     )
+    def groups(self):
+        return Group.objects.filter(allocation = self)
+    def FromList(supervisor, allocation_list,group_name="Group {}:"):
+        allocation = Allocation.objects.create(supervisor = supervisor)
+        for i in range(0,len(allocation_list)):
+            group = Group.objects.create(size = supervisor.group_size, allocation=allocation,name=group_name.format(str(i+1)))
+            for j in range(0, len(allocation_list[i])):
+                allocation_list[i][j].group.add(group)
+        return allocation
 
 
 class Group(models.Model):
+    name = models.CharField(null=True, max_length = 50)
     size = models.IntegerField(default=4)
     isApproved = models.BooleanField(default=False)
     task = models.CharField(max_length=50, null=True)
@@ -77,8 +125,8 @@ class Group(models.Model):
     def getScore(self):
         return False
 
-    def getParticipants(self):
-        return Participant.objects.get(group=self)
+    def members(self):
+        return Participant.objects.filter(group=self)
 
     def approve(self):
         self.isApproved = True
@@ -119,3 +167,17 @@ class Participant(Person):
 
     def getGroup(self):
         return self.group
+
+    def LoadCsv(supervisor):
+        with open("GroupAssignmentApp/demo_participants.csv", newline="") as csvfile:
+            participants = csv.reader(csvfile, delimiter=",", quotechar='"')
+            next(participants, None)
+            preferences = []
+            for row in participants:
+                p = Participant.objects.create(
+                    supervisor=supervisor, name=row[0], email=row[1], gender=row[2]
+                )
+                preferences.append((p, "{},{},{}".format(row[3], row[4], row[5])))
+            for p in preferences:
+                p[0].preferences = p[1]
+                p[0].save()

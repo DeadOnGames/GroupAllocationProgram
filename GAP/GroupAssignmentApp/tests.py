@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.http import HttpRequest
 from .models import Person, Group, Supervisor_Model, Participant, Allocation
-from .forms import PersonForm
+from .forms import PreferencesForm
 from .GenerateNeighbour import generate_neighbours
 from statistics import mode
 from .HillClimb import hill_climb
@@ -83,13 +83,13 @@ class GroupTests(TestCase):
         g.allocation = a
         g.save()
         g1 = Group.objects.create()
-        self.assertEqual(len(Group.objects.all()), 2)
+
         self.assertEqual(len(a.group_set.all()), 1)
 
 
 class SupervisorTests(TestCase):
     def test_score_group(self):
-        s = Supervisor_Model.objects.create(genderWeight=1)
+        s = Supervisor_Model.objects.create(gender_weight=1)
         group_arr = [
             Participant.objects.create(gender="male"),
             Participant.objects.create(gender="male"),
@@ -102,7 +102,29 @@ class SupervisorTests(TestCase):
         group_arr[0].gender = "male"
         group_arr[3].gender = "male"
         self.assertEqual(s.score_group(group_arr), 0.5)
+    def test_make_group_list(self):
+        s = Supervisor_Model.objects.create(gender_weight=5, name="Super Visor", email = "sv@gmail.com")
+        for i in range(0,5):
+            Participant.objects.create(gender="male",name="jeff{}".format(i), supervisor = s)
+        for i in range(0,5):
+            Participant.objects.create(gender="female",name="jane{}".format(i), supervisor = s)
+        for i in range(0,20):
+            s.group_size = i+1
+            group_list =s.make_group_list()
+            self.assertFalse(group_list is None)
+            self.assertFalse(len(group_list) == 0)
+            for group in group_list:
+                self.assertFalse(len(group) == 0)
 
+    def test_assign_groups_gender_weight(self):
+        s = Supervisor_Model.objects.create(gender_weight=5, name="Super Visor", email = "sv@gmail.com")
+        for i in range(0,5):
+            Participant.objects.create(gender="male",name="jeff{}".format(i), supervisor = s)
+        for i in range(0,5):
+            Participant.objects.create(gender="female",name="jane{}".format(i), supervisor = s)
+        for i in range(0,20):
+            s.group_size = i+1
+            s.assign_groups()
 
 class AllocationTests(TestCase):
     def test_create(self):
@@ -115,7 +137,7 @@ class GenerateNeighboursTests(TestCase):
     def test_one_array_input(self):
         test_arr = [[1, 2, 3]]
         nhbrs = generate_neighbours(test_arr)
-        self.assertEqual(nhbrs, [[[]]])
+        self.assertEqual(nhbrs, [test_arr])
 
     # Test that Input is not included as neighbour
     def test_input_not_included(self):
@@ -183,19 +205,19 @@ class HillClimbTest(TestCase):
             )
 
 
-# Test PersonForm
-class PersonFormTests(TestCase):
+# Test PreferencesForm
+class PreferencesFormTest(TestCase):
     def test_class_list_function(self):
         Participant.objects.create(name="Joe Blogs", email="jb@gmail.com")
-        self.assertEquals(len(PersonForm.class_list()), 1)
+        self.assertEquals(len(PreferencesForm.class_list()), 1)
         Participant.objects.create(name="Joe Blogs Senior")
-        self.assertEquals(len(PersonForm.class_list()), 1)
+        self.assertEquals(len(PreferencesForm.class_list()), 1)
         p = Participant.objects.create(name="James Bond", email="jb007@gmail.com")
-        self.assertEquals(len(PersonForm.class_list()), 2)
-        self.assertEquals(PersonForm.class_list()[1][0], p.id)
+        self.assertEquals(len(PreferencesForm.class_list()), 2)
+        self.assertEquals(PreferencesForm.class_list()[1][0], p.id)
 
     def test_constructor_no_request(self):
-        test_form = PersonForm(n_preferences=5)
+        test_form = PreferencesForm(n_preferences=5)
         for i in range(0, 5):
             self.assertTrue("preference_{}".format(i + 1) in test_form.fields.keys())
 
@@ -221,7 +243,7 @@ class PersonFormTests(TestCase):
             "last_name": "0",
             "wants_notified": True,
         }
-        form = PersonForm(request.POST)
+        form = PreferencesForm(request.POST)
         self.assertTrue(form.is_valid())
         # correct choice ids
         choices = [1, 2, 6]
